@@ -1,5 +1,5 @@
 #include "nemu.h"
-
+//内存，用大数组pmem模拟。
 #define PMEM_SIZE (128 * 1024 * 1024)
 
 #define pmem_rw(addr, type) *(type *)({\

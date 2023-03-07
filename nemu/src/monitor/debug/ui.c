@@ -28,12 +28,59 @@ char* rl_gets() {
 }
 
 static int cmd_c(char *args) {
-  cpu_exec(-1);
+  cpu_exec(-1);//-1为无符号数的最大整数，这样用可以执行完所有指令
   return 0;
 }
 
 static int cmd_q(char *args) {
   return -1;
+}
+
+static int cmd_si(char *args) {
+  char *arg = strtok(NULL, " ");
+  int n = 1;
+  if(arg != NULL) {
+    sscanf(arg, "%d", &n);
+  }
+  cpu_exec(n);
+  return 0;
+}
+
+static int cmd_info(char *args) {
+  char *arg = strtok(NULL, " ");
+  int i;
+  if(strcmp(arg,"r") == 0) {
+    for(i = 0; i < 8; i ++) {
+      printf("%s\t\t", regsl[i]);
+      printf("0x%08x\t\t%d\n", cpu.gpr[i]._32, cpu.gpr[i]._32);
+    }
+    printf("eip:\t\t0x%08x\t\t%d\n", cpu.eip, cpu.eip);
+  } else if(strcmp(arg,"w") == 0) {
+    puts("print watch point infomation...... Nothing happened");
+  } else {
+    puts("unknown arg or miss input");
+  }
+  return 0;
+}
+
+static int cmd_p(char *args) {
+  // Expression evaluation
+  return 0;
+}
+
+static int cmd_x(char *args) {
+  // scan mem
+  char *arg_1 = strtok(NULL, " ");
+  char *arg_2 = strtok(NULL, " ");
+  int step, address;
+  sscanf(arg_1, "%d", &step);
+  sscanf(arg_2, "%x", &address);
+  printf("0x%x:",address);  
+  int i;
+  for(i = 0; i < step; i ++){  
+    printf("0x%8x  0x%x\n",address + i*32,swaddr_read(address + i * 32,32));
+  }
+  return 0;  
 }
 
 static int cmd_help(char *args);
@@ -46,6 +93,10 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+  { "si", "One step execute for N times", cmd_si},
+  { "info", "print registers status | watchpoint infomations", cmd_info},
+  { "x", "scan memory", cmd_x},
+  { "p", "expression evaluation", cmd_p},
 
   /* TODO: Add more commands */
 
