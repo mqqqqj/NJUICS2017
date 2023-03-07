@@ -78,7 +78,7 @@ static int cmd_x(char *args) {
   printf("0x%x:",address);  
   int i;
   for(i = 0; i < step; i ++){  
-    printf("0x%8x  0x%x\n",address + i*32,swaddr_read(address + i * 32,32));
+    printf("0x%8x  0x%x\n",address + i*32,paddr_read(address + i * 32,32));
   }
   return 0;  
 }
