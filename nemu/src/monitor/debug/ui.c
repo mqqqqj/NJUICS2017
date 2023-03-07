@@ -54,7 +54,7 @@ static int cmd_info(char *args) {
       printf("%s\t\t", regsl[i]);
       printf("0x%08x\t\t%d\n", cpu.gpr[i]._32, cpu.gpr[i]._32);
     }
-    printf("eip:\t\t0x%08x\t\t%d\n", cpu.eip, cpu.eip);
+    printf("eip\t\t0x%08x\t\t%d\n", cpu.eip, cpu.eip);
   } else if(strcmp(arg,"w") == 0) {
     puts("print watch point infomation...... Nothing happened");
   } else {
@@ -78,8 +78,10 @@ static int cmd_x(char *args) {
   printf("0x%x:",address);  
   int i;
   for(i = 0; i < step; i ++){  
-    printf("0x%8x  0x%x\n",address + i*32,paddr_read(address + i * 32,32));
+    printf("%08x ",paddr_read(address,4));
+    address += 4; 
   }
+  printf("\n");
   return 0;  
 }
 
