@@ -82,7 +82,7 @@ static bool make_token(char *e) {
   while (e[position] != '\0') {
     /* Try all rules one by one. */
     for (i = 0; i < NR_REGEX; i ++) {
-      if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {
+      if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {// find a rule match the char e
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
@@ -185,6 +185,15 @@ static bool make_token(char *e) {
 
 
 bool check_parentheses(int p, int q) {
+  if(tokens[p].type == '(' && tokens[q].type == ')') {
+    int num_lb = 0, num_rb = 0, index = p;
+    for ( ; index <= q; index ++) {
+      if(tokens[index].type == '(') num_lb ++;
+      if(tokens[index].type == ')') num_rb ++;
+    }
+    if(num_lb == num_rb) return true;
+    else return false;
+  }  
   return false;
 }
 
@@ -193,6 +202,18 @@ int dominant_operator(int p, int q) {
 }
 
 uint32_t eval(int p, int q) {
+  if(p > q) {
+    // bad expression
+  } else if(p == q) {
+    // single token
+    //it must be a number, return its value
+    return tokens[p];
+  } else if(check_parentheses(p, q) == true) {
+    // check the ( and ) is match
+    return eval(p + 1, q - 1);
+  } else {
+    // do nothing
+  }
   return 0;
 }
 
