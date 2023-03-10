@@ -186,18 +186,27 @@ static bool make_token(char *e) {
 
 bool check_parentheses(int p, int q) {
   if(tokens[p].type == '(' && tokens[q].type == ')') {
-    int num_lb = 0, num_rb = 0, index = p;
+    // int num_lb = 0, num_rb = 0, index = p;
+    // for ( ; index <= q; index ++) {
+    //   if(tokens[index].type == '(') num_lb ++;
+    //   if(tokens[index].type == ')') num_rb ++;
+    // }
+    // if(num_lb == num_rb) return true;
+    // else return false;
+    int n = 0, index = p;
     for ( ; index <= q; index ++) {
-      if(tokens[index].type == '(') num_lb ++;
-      if(tokens[index].type == ')') num_rb ++;
+      if(tokens[index].type == '(') n ++;
+      if(tokens[index].type == ')') n --;
+      if(n < 0) return false;
     }
-    if(num_lb == num_rb) return true;
+    if(n == 0) return true;
     else return false;
   }  
   return false;
 }
 
 int dominant_operator(int p, int q) {
+
   return 0;
 }
 
@@ -206,13 +215,47 @@ uint32_t eval(int p, int q) {
     // bad expression
   } else if(p == q) {
     // single token
-    //it must be a number, return its value
+    if(tokens[p].type == 1) {
+      // oct num
+      int val;
+      sscanf(tokens[p].str, "%d", val);
+      return val;
+    } else if(tokens[p].type == 7) {
+      // hex num
+      int val;
+      sscanf(tokens[p].str, "%x", val);
+      return val;      
+    } else if(tokens[p].type == 6) {  //reg
+      if(!strcmp(tokens[p].str, "$eax")){
+					return cpu.eax;
+      } else if (!strcmp(tokens[p].str, "$ecx")){
+        return cpu.ecx;
+      } else if (!strcmp(tokens[p].str, "$edx")){
+        return cpu.edx;
+      } else if (!strcmp(tokens[p].str, "$ebx")){
+        return cpu.ebx;
+      } else if (!strcmp(tokens[p].str, "$esp")){
+        return cpu.esp;
+      } else if (!strcmp(tokens[p].str, "$ebp")){
+        return cpu.ebp;
+      } else if (!strcmp(tokens[p].str, "$esi")){
+        return cpu.esi;
+      } else if (!strcmp(tokens[p].str, "$edi")){
+        return cpu.edi;
+      } else if (!strcmp(tokens[p].str, "$eip")){
+        return cpu.eip;
+      } else {
+        return 0;
+      }
+    } else {
+      assert(0);
+    }
     return tokens[p];
   } else if(check_parentheses(p, q) == true) {
     // check the ( and ) is match
     return eval(p + 1, q - 1);
   } else {
-    // do nothing
+    
   }
   return 0;
 }
