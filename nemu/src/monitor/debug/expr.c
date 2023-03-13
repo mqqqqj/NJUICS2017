@@ -43,7 +43,6 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
   {" +", TK_NOTYPE},    // spaces
   {"[0-9]+", TK_NUM},
   {"\\+", TK_ADD},         // plus
@@ -119,13 +118,13 @@ static bool make_token(char *e) {
         switch (rules[i].token_type) {
           case 256: //space
             break;
-          case 1:   //num
-            tokens[i].type = 1;
+          case TK_NUM:   //num
+            tokens[i].type = TK_NUM;
             strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
             nr_token ++;
             break;
-          case 2:   //equal to
-            tokens[i].type = 2;
+          case TK_EQ:   //equal to
+            tokens[i].type = TK_EQ;
             strcpy(tokens[nr_token].str, "==");
             nr_token ++;
             break;
@@ -180,11 +179,13 @@ static bool make_token(char *e) {
             break;
           case TK_LB:
             tokens[i].type = TK_LB;
+            printf("LB\n");
             strcpy(tokens[nr_token].str, "(");
             nr_token ++;
             break;
           case TK_RB:
             tokens[i].type = TK_RB;
+            printf("RB\n");
             strcpy(tokens[nr_token].str, ")");
             nr_token ++;
             break;
