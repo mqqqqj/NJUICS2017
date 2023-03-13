@@ -256,8 +256,8 @@ bool check_parentheses(int p, int q) {
     // }
     // if(num_lb == num_rb) return true;
     // else return false;
-    int n = 0, index = p;
-    for ( ; index <= q; index ++) {
+    int n = 0, index = p + 1;
+    for ( ; index <= q - 1; index ++) {
       if(tokens[index].type == TK_LB) n ++;
       if(tokens[index].type == TK_RB) n --;
       if(n < 0) return false;
