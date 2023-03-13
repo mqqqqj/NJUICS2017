@@ -361,7 +361,7 @@ uint32_t eval(int p, int q) {
     if(op == -1) {  // * ! - >> <<
       switch (tokens[p].type) {
         case TK_DEREF: 
-          if(tokens[q].type == TK_REG) {
+          if(tokens[p + 2].type == TK_REG) {
             if (!strcmp(tokens[p + 2].str, "$eax")){
 					    return vaddr_read(cpu.eax, 4);
             } else if (!strcmp(tokens[p + 2].str, "$ecx")){
