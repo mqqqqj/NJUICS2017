@@ -65,7 +65,13 @@ static int cmd_info(char *args) {
 
 static int cmd_p(char *args) {
   // Expression evaluation
-  return 0;
+  bool *success = false;
+	int i;
+	i = expr(args, success);
+	if (!success){
+		printf("%d\n", i);
+	}
+	return 0;
 }
 
 static int cmd_x(char *args) {
