@@ -358,7 +358,8 @@ uint32_t eval(int p, int q) {
   } else {
     int op = dominant_operator(p, q);
     printf("current domain:%d %d\n",p, q);
-    if(op == -1) {  // * ! - >> <<
+    if(op == -1) {  // * ! -
+      printf("choose %s\n as dominant op", tokens[p].str);
       switch (tokens[p].type) {
         case TK_DEREF: return vaddr_read(eval(p + 1, q),4);
           // if(tokens[p + 2].type == TK_REG) {
@@ -391,6 +392,7 @@ uint32_t eval(int p, int q) {
         default : assert(0);
       }
     } else {
+      printf("choose %s\n as dominant op", tokens[op].str);
       int val1 = eval(p, op - 1);
       int val2 = eval(op + 1, q);
       switch(tokens[op].type) {
