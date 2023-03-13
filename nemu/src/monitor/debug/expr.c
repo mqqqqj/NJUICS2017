@@ -191,6 +191,7 @@ static bool make_token(char *e) {
 
 
 bool check_parentheses(int p, int q) {
+  printf("111\n");
   if(tokens[p].type == '(' && tokens[q].type == ')') {
     // int num_lb = 0, num_rb = 0, index = p;
     // for ( ; index <= q; index ++) {
@@ -205,6 +206,7 @@ bool check_parentheses(int p, int q) {
       if(tokens[index].type == ')') n --;
       if(n < 0) return false;
     }
+    printf("n:%d",n);
     if(n == 0) return true;
     else return false;
   }  
@@ -335,6 +337,6 @@ uint32_t expr(char *e, bool *success) {
       tokens[i].type = TK_NEG;
     }
   }
-  printf("%d\n", nr_token);
+  printf("nr token:%d\n", nr_token);
   return eval(0, nr_token - 1);
 }
