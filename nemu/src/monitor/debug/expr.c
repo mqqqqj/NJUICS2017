@@ -200,6 +200,7 @@ bool check_parentheses(int p, int q) {
     // }
     // if(num_lb == num_rb) return true;
     // else return false;
+    printf("222\n");
     int n = 0, index = p;
     for ( ; index <= q; index ++) {
       if(tokens[index].type == '(') n ++;
