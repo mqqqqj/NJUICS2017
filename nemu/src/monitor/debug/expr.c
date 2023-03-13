@@ -258,8 +258,8 @@ bool check_parentheses(int p, int q) {
     // else return false;
     int n = 0, index = p;
     for ( ; index <= q; index ++) {
-      if(tokens[index].type == '(') n ++;
-      if(tokens[index].type == ')') n --;
+      if(tokens[index].type == TK_LB) n ++;
+      if(tokens[index].type == TK_RB) n --;
       if(n < 0) return false;
     }
     if(n == 0) return true;
