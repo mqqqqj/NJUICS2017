@@ -289,18 +289,19 @@ uint32_t eval(int p, int q) {
     }
   } else if(check_parentheses(p, q) == true) {
     // check the ( and ) is match
+    printf("check parentheses ok.\n");
     return eval(p + 1, q - 1);
   } else {
     int op = dominant_operator(p, q);
     if(op == -1) {  // * ! -
-      assert(op == p);
-      switch (tokens[op].type) {
+      switch (tokens[p].type) {
         //case TK_DEREF: return *(eval(p + 1, q));
         case '!': return !eval(p + 1, q);
         case TK_NEG: return -eval(p + 1, q);
         default : assert(0);
       }
     } else {
+      printf("%d\n",op);
       int val1 = eval(p, op - 1);
       int val2 = eval(op + 1, q);
       switch(tokens[op].type) {
