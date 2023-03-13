@@ -148,27 +148,27 @@ static bool make_token(char *e) {
             break;
           case '+':
             tokens[i].type = '+';
-            strcpy(tokens[nr_token].str, '+');
+            strcpy(tokens[nr_token].str, "+");
             nr_token ++;
             break;
           case '-':
             tokens[i].type = '-';
-            strcpy(tokens[nr_token].str, '-');
+            strcpy(tokens[nr_token].str, "-");
             nr_token ++;
             break;
           case '*':
             tokens[i].type = '*';
-            strcpy(tokens[nr_token].str, '*');
+            strcpy(tokens[nr_token].str, "*");
             nr_token ++;
             break;
           case '/':
             tokens[i].type = '/';
-            strcpy(tokens[nr_token].str, '/');
+            strcpy(tokens[nr_token].str, "/");
             nr_token ++;
             break;
           case '!':
             tokens[i].type = '!';
-            strcpy(tokens[nr_token].str, '!');
+            strcpy(tokens[nr_token].str, "!");
             nr_token ++;
             break;
           case '(':
