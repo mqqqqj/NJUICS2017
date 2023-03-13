@@ -179,13 +179,11 @@ static bool make_token(char *e) {
             break;
           case TK_LB:
             tokens[nr_token].type = TK_LB;
-            printf("LB\n");
             strcpy(tokens[nr_token].str, "(");
             nr_token ++;
             break;
           case TK_RB:
             tokens[nr_token].type = TK_RB;
-            printf("RB\n");
             strcpy(tokens[nr_token].str, ")");
             nr_token ++;
             break;
@@ -206,8 +204,6 @@ static bool make_token(char *e) {
 
 
 bool check_parentheses(int p, int q) {
-  printf("%d\n",tokens[q].type);
-  printf("%s\n",tokens[q].str);
   if(tokens[p].type == TK_LB && tokens[q].type == TK_RB) {
     // int num_lb = 0, num_rb = 0, index = p;
     // for ( ; index <= q; index ++) {
@@ -216,14 +212,12 @@ bool check_parentheses(int p, int q) {
     // }
     // if(num_lb == num_rb) return true;
     // else return false;
-    printf("222\n");
     int n = 0, index = p;
     for ( ; index <= q; index ++) {
       if(tokens[index].type == '(') n ++;
       if(tokens[index].type == ')') n --;
       if(n < 0) return false;
     }
-    printf("n:%d",n);
     if(n == 0) return true;
     else return false;
   }  
@@ -308,10 +302,8 @@ uint32_t eval(int p, int q) {
     }
   } else if(check_parentheses(p, q) == true) {
     // check the ( and ) is match
-    printf("check parentheses ok.\n");
     return eval(p + 1, q - 1);
   } else {
-    printf("p is %d and q is %d \n", p, q);
     int op = dominant_operator(p, q);
     if(op == -1) {  // * ! -
       switch (tokens[p].type) {
@@ -321,7 +313,6 @@ uint32_t eval(int p, int q) {
         default : assert(0);
       }
     } else {
-      printf("%d\n",op);
       int val1 = eval(p, op - 1);
       int val2 = eval(op + 1, q);
       switch(tokens[op].type) {
@@ -355,8 +346,8 @@ uint32_t expr(char *e, bool *success) {
       tokens[i].type = TK_NEG;
     }
   }
-  printf("nr token:%d\n", nr_token);
-  for(i = 0; i < nr_token; i ++) printf("%d %s\n",tokens[i].type,tokens[i].str);
-  printf("\n");
+  // printf("nr token:%d\n", nr_token);
+  // for(i = 0; i < nr_token; i ++) printf("%d %s\n",tokens[i].type,tokens[i].str);
+  // printf("\n");
   return eval(0, nr_token - 1);
 }
