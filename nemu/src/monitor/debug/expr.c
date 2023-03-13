@@ -227,9 +227,9 @@ bool check_parentheses(int p, int q) {
 int dominant_operator(int p, int q) {
   int loc = -1, i = p, is_in_br = 0, priority = 99;
   for( ; i <= q; i ++) {
-    if(tokens[i].type == '(') {
+    if(tokens[i].type == TK_LB) {
       is_in_br ++;
-    } else if(tokens[i].type == ')') {
+    } else if(tokens[i].type == TK_RB) {
       is_in_br --;
     }
     if(is_in_br == 0) {
@@ -245,11 +245,11 @@ int dominant_operator(int p, int q) {
         if(priority > PRI_EQ) {
           priority = PRI_EQ, loc = i;
         }
-      } else if(tokens[i].type == '+' || tokens[i].type == '-') {
+      } else if(tokens[i].type == TK_ADD || tokens[i].type == TK_SUB) {
         if(priority > PRI_ADD) {
           priority = PRI_ADD, loc = i;
         }
-      } else if(tokens[i].type == '*' || tokens[i].type == '/') {
+      } else if(tokens[i].type == TK_MUL || tokens[i].type == TK_DIV) {
         if(priority > PRI_MUL) {
           priority = PRI_MUL, loc = i;
         }
@@ -305,6 +305,7 @@ uint32_t eval(int p, int q) {
     return eval(p + 1, q - 1);
   } else {
     int op = dominant_operator(p, q);
+    printf("current domain:%d %d\n",p, q);
     if(op == -1) {  // * ! -
       switch (tokens[p].type) {
         //case TK_DEREF: return *(eval(p + 1, q));
