@@ -52,6 +52,7 @@ static struct rule {
    * Pay attention to the precedence level of different rules.
    */
   {" +", TK_NOTYPE},    // spaces
+  {"0[xX][0-9a-fA-F]+", TK_HEX},
   {"[0-9]+", TK_NUM},
   {"\\+", TK_ADD},         // plus
   {"\\-", TK_SUB},         // sub
@@ -70,7 +71,6 @@ static struct rule {
   {"&&", TK_AND},       // and op
   {"\\|\\|", TK_OR},    // or op
   {"\\$[a-z]+", TK_REG},// registers
-  {"0[xX][0-9a-fA-F]+", TK_HEX},
   {"!", TK_NOT}
 };
 
