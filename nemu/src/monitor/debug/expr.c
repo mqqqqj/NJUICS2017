@@ -309,7 +309,7 @@ uint32_t eval(int p, int q) {
     if(op == -1) {  // * ! -
       switch (tokens[p].type) {
         //case TK_DEREF: return *(eval(p + 1, q));
-        case '!': return !eval(p + 1, q);
+        case TK_NOT: return !eval(p + 1, q);
         case TK_NEG: return -eval(p + 1, q);
         default : assert(0);
       }
@@ -341,9 +341,9 @@ uint32_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
   int i = 0;
   for( ; i < nr_token ;i ++) {
-    if(tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != ')'))) {
+    if(tokens[i].type == TK_MUL && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != ')'))) {
       tokens[i].type = TK_DEREF;
-    } else if(tokens[i].type == '-' && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != ')'))) {
+    } else if(tokens[i].type == TK_SUB && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != ')'))) {
       tokens[i].type = TK_NEG;
     }
   }
