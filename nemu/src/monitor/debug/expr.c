@@ -23,7 +23,13 @@ enum {
   TK_SUB = 13,
   TK_MUL = 14,
   TK_DIV = 15,
-  TK_NOT = 16
+  TK_NOT = 16,
+  TK_LTE = 17,
+  TK_GTE = 18,
+  TK_LT = 19,
+  TK_GT = 20,
+  TK_LM = 21,
+  TK_RM = 22
   /* TODO: Add more token types */
 };
 
@@ -31,6 +37,8 @@ enum {
   PRI_OR,
   PRI_AND,
   PRI_EQ,
+  PRI_LT,
+  PRI_LM,
   PRI_ADD,
   PRI_MUL
 };
@@ -51,6 +59,12 @@ static struct rule {
 	{"\\/", TK_DIV},         //division
   {"\\(", TK_LB},         // left bracket
   {"\\)", TK_RB},         // right bracket
+  {"<=", TK_LTE},
+  {">=", TK_GTE},
+  {">>", TK_RM},
+  {"<<", TK_LM},
+  {">", TK_GT},
+  {"<", TK_LT},
   {"==", TK_EQ},        // equal
   {"!=", TK_NEQ},       // not equal
   {"&&", TK_AND},       // and op
@@ -187,6 +201,36 @@ static bool make_token(char *e) {
             strcpy(tokens[nr_token].str, ")");
             nr_token ++;
             break;
+          case TK_LTE:
+            tokens[nr_token].type = TK_LTE;
+            strcpy(tokens[nr_token].str, "<=");
+            nr_token ++;
+            break;
+          case TK_GTE:
+            tokens[nr_token].type = TK_GTE;
+            strcpy(tokens[nr_token].str, ">=");
+            nr_token ++;
+            break;
+          case TK_GT:
+            tokens[nr_token].type = TK_GT;
+            strcpy(tokens[nr_token].str, ">");
+            nr_token ++;
+            break;
+          case TK_LT:
+            tokens[nr_token].type = TK_LT;
+            strcpy(tokens[nr_token].str, "<");
+            nr_token ++;
+            break;
+          case TK_LM:
+            tokens[nr_token].type = TK_LM;
+            strcpy(tokens[nr_token].str, "<<");
+            nr_token ++;
+            break;
+          case TK_RM:
+            tokens[nr_token].type = TK_RM;
+            strcpy(tokens[nr_token].str, ">>");
+            nr_token ++;
+            break;
           default: assert(0);
         }
         break;
@@ -244,6 +288,14 @@ int dominant_operator(int p, int q) {
       } else if(tokens[i].type == TK_EQ || tokens[i].type == TK_NEQ) {
         if(priority > PRI_EQ) {
           priority = PRI_EQ, loc = i;
+        }
+      } else if(tokens[i].type == TK_LT || tokens[i].type == TK_LTE || tokens[i].type == TK_GT || tokens[i].type == TK_GTE) {
+        if(priority > PRI_LT) {
+          priority = PRI_LT, loc = i;
+        }
+      } else if(tokens[i].type == TK_LM || tokens[i].type == TK_RM) {
+        if(priority > PRI_LM) {
+          priority = PRI_LM, loc = i;
         }
       } else if(tokens[i].type == TK_ADD || tokens[i].type == TK_SUB) {
         if(priority > PRI_ADD) {
@@ -306,9 +358,34 @@ uint32_t eval(int p, int q) {
   } else {
     int op = dominant_operator(p, q);
     printf("current domain:%d %d\n",p, q);
-    if(op == -1) {  // * ! -
+    if(op == -1) {  // * ! - >> <<
       switch (tokens[p].type) {
-        //case TK_DEREF: return *(eval(p + 1, q));
+        case TK_DEREF: 
+          if(tokens[q].type == TK_REG) {
+            if (!strcmp(tokens[p + 2].str, "$eax")){
+					    return vaddr_read(cpu.eax, 4);
+            } else if (!strcmp(tokens[p + 2].str, "$ecx")){
+              return vaddr_read(cpu.ecx, 4);
+            } else if (!strcmp(tokens[p + 2].str, "$edx")){
+              return vaddr_read(cpu.edx, 4);
+            } else if (!strcmp(tokens[p + 2].str, "$ebx")){
+              return vaddr_read(cpu.ebx, 4);
+            } else if (!strcmp(tokens[p + 2].str, "$esp")){
+              return vaddr_read(cpu.esp, 4);
+            } else if (!strcmp(tokens[p + 2].str, "$ebp")){
+              return vaddr_read(cpu.ebp, 4);
+            } else if (!strcmp(tokens[p + 2].str, "$esi")){
+              return vaddr_read(cpu.esi, 4);
+            } else if (!strcmp(tokens[p + 2].str, "$edi")){
+              return vaddr_read(cpu.edi, 4);
+            } else if (!strcmp(tokens[p + 2].str, "$eip")){
+              return vaddr_read(cpu.eip, 4);
+            } else {
+              assert(0);
+            }
+          } else {
+            assert(0);
+          }
         case TK_NOT: return !eval(p + 1, q);
         case TK_NEG: return -eval(p + 1, q);
         default : assert(0);
@@ -325,6 +402,12 @@ uint32_t eval(int p, int q) {
         case TK_AND: return val1 && val2;
         case TK_EQ: return (val1 == val2);
         case TK_NEQ: return (val1 != val2);
+        case TK_LT: return (val1 < val2);
+        case TK_LTE: return (val1 <= val2);
+        case TK_GT: return (val1 > val2);
+        case TK_GTE: return (val1 >= val2);
+        case TK_LM: return (val1 << val2);
+        case TK_RM: return (val1 >> val2);
         default: assert(0);
       }
     }
