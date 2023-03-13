@@ -67,6 +67,7 @@ static int cmd_p(char *args) {
   // Expression evaluation
   bool *success = false;
 	int i;
+  printf("%s", args);
 	i = expr(args, success);
 	if (!success){
 		printf("%d\n", i);
