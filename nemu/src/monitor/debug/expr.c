@@ -426,9 +426,9 @@ uint32_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
   int i = 0;
   for( ; i < nr_token ;i ++) {
-    if(tokens[i].type == TK_MUL && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != ')'))) {
+    if(tokens[i].type == TK_MUL && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_RB))) {
       tokens[i].type = TK_DEREF;
-    } else if(tokens[i].type == TK_SUB && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != ')'))) {
+    } else if(tokens[i].type == TK_SUB && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != TK_RB))) {
       tokens[i].type = TK_NEG;
     }
   }
