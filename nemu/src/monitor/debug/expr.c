@@ -325,7 +325,6 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-
   /* TODO: Insert codes to evaluate the expression. */
   int i = 0;
   for( ; i < nr_token ;i ++) {
@@ -335,6 +334,5 @@ uint32_t expr(char *e, bool *success) {
       tokens[i].type = TK_NEG;
     }
   }
-
   return eval(0, nr_token - 1);
 }
