@@ -309,6 +309,7 @@ uint32_t eval(int p, int q) {
     printf("check parentheses ok.\n");
     return eval(p + 1, q - 1);
   } else {
+    printf("p is %d and q is %d \n", p, q);
     int op = dominant_operator(p, q);
     if(op == -1) {  // * ! -
       switch (tokens[p].type) {
