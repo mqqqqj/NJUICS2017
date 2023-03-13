@@ -119,72 +119,72 @@ static bool make_token(char *e) {
           case 256: //space
             break;
           case TK_NUM:   //num
-            tokens[i].type = TK_NUM;
+            tokens[nr_token].type = TK_NUM;
             strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
             nr_token ++;
             break;
           case TK_EQ:   //equal to
-            tokens[i].type = TK_EQ;
+            tokens[nr_token].type = TK_EQ;
             strcpy(tokens[nr_token].str, "==");
             nr_token ++;
             break;
           case 3:
-            tokens[i].type = 3;
+            tokens[nr_token].type = 3;
             strcpy(tokens[nr_token].str, "!=");
             nr_token ++;
             break;
           case 4:
-            tokens[i].type = 4;
+            tokens[nr_token].type = 4;
             strcpy(tokens[nr_token].str, "&&");
             nr_token ++;
             break;
           case 5:
-            tokens[i].type = 5;
+            tokens[nr_token].type = 5;
             strcpy(tokens[nr_token].str, "||");
             nr_token ++;
             break;
           case 6:
-            tokens[i].type = 6;
+            tokens[nr_token].type = 6;
             strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
             nr_token ++;
             break;
           case 7:
-            tokens[i].type = 7;
+            tokens[nr_token].type = 7;
             strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
             nr_token ++;
             break;
           case TK_NOT:
-            tokens[i].type = TK_NOT;
+            tokens[nr_token].type = TK_NOT;
             strcpy(tokens[nr_token].str, "!");
             nr_token ++;
           case TK_ADD:
-            tokens[i].type = TK_ADD;
+            tokens[nr_token].type = TK_ADD;
             strcpy(tokens[nr_token].str, "+");
             nr_token ++;
             break;
           case TK_SUB:
-            tokens[i].type = TK_SUB;
+            tokens[nr_token].type = TK_SUB;
             strcpy(tokens[nr_token].str, "-");
             nr_token ++;
             break;
           case TK_MUL:
-            tokens[i].type = TK_MUL;
+            tokens[nr_token].type = TK_MUL;
             strcpy(tokens[nr_token].str, "*");
             nr_token ++;
             break;
           case TK_DIV:
-            tokens[i].type = TK_DIV;
+            tokens[nr_token].type = TK_DIV;
             strcpy(tokens[nr_token].str, "/");
             nr_token ++;
             break;
           case TK_LB:
-            tokens[i].type = TK_LB;
+            tokens[nr_token].type = TK_LB;
             printf("LB\n");
             strcpy(tokens[nr_token].str, "(");
             nr_token ++;
             break;
           case TK_RB:
-            tokens[i].type = TK_RB;
+            tokens[nr_token].type = TK_RB;
             printf("RB\n");
             strcpy(tokens[nr_token].str, ")");
             nr_token ++;
