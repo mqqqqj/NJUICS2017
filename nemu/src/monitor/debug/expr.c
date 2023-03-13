@@ -14,8 +14,18 @@ enum {
   TK_AND = 4,
   TK_OR = 5,
   TK_REG = 6,
-  TK_HEX = 7
+  TK_HEX = 7,
+  TK_DEREF = 8,
+  TK_NEG = 9
   /* TODO: Add more token types */
+};
+
+enum {
+  PRI_OR,
+  PRI_AND,
+  PRI_EQ,
+  PRI_ADD,
+  PRI_MUL
 };
 
 static struct rule {
@@ -102,70 +112,66 @@ static bool make_token(char *e) {
           case 256: //space
             break;
           case 1:   //num
-            tokens[i].token_type = 1;
+            tokens[i].type = 1;
             strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
             nr_token ++;
             break;
           case 2:   //equal to
-            token[i].token_type = 2;
+            tokens[i].type = 2;
             strcpy(tokens[nr_token].str, "==");
             nr_token ++;
             break;
           case 3:
-            token[i].token_type = 3;
+            tokens[i].type = 3;
             strcpy(tokens[nr_token].str, "!=");
             nr_token ++;
             break;
           case 4:
-            token[i].token_type = 4;
+            tokens[i].type = 4;
             strcpy(tokens[nr_token].str, "&&");
             nr_token ++;
             break;
           case 5:
-            token[i].token_type = 5;
+            tokens[i].type = 5;
             strcpy(tokens[nr_token].str, "||");
             nr_token ++;
             break;
           case 6:
-            token[i].token_type = 6;
+            tokens[i].type = 6;
             strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
             nr_token ++;
             break;
           case 7:
-            token[i].token_type = 7;
+            tokens[i].type = 7;
             strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
             nr_token ++;
             break;
           case '+':
-            token[i].token_type = '+';
-            nr_token ++;
-            break;
-          case '+':
-            token[i].token_type = '+';
+            tokens[i].type = '+';
             nr_token ++;
             break;
           case '-':
-            token[i].token_type = '-';
+            tokens[i].type = '-';
             nr_token ++;
             break;
           case '*':
-            token[i].token_type = '*';
+            tokens[i].type = '*';
             nr_token ++;
             break;
           case '/':
-            token[i].token_type = '/';
+            tokens[i].type = '/';
             nr_token ++;
             break;
           case '!':
-            token[i].token_type = '!';
+            tokens[i].type = '!';
             nr_token ++;
             break;
           case '(':
-            token[i].token_type = '(';
+            tokens[i].type = '(';
             nr_token ++;
             break;
           case ')':
-            token[i].token_type = ')';
+            tokens[i].type = ')';
             nr_token ++;
             break;
           default: assert(0);
@@ -206,24 +212,55 @@ bool check_parentheses(int p, int q) {
 }
 
 int dominant_operator(int p, int q) {
-
-  return 0;
+  int loc = -1, i = p, is_in_br = 0, priority = 99;
+  for( ; i <= q; i ++) {
+    if(tokens[i].type == '(') {
+      is_in_br ++;
+    } else if(tokens[i].type == ')') {
+      is_in_br --;
+    }
+    if(is_in_br == 0) {
+      if(tokens[i].type == TK_OR) {
+        if(priority > PRI_OR) {
+          priority = PRI_OR, loc = i;
+        }
+      } else if(tokens[i].type == TK_AND) {
+        if(priority > PRI_AND) {
+          priority = PRI_AND, loc = i;
+        }
+      } else if(tokens[i].type == TK_EQ || tokens[i].type == TK_NEQ) {
+        if(priority > PRI_EQ) {
+          priority = PRI_EQ, loc = i;
+        }
+      } else if(tokens[i].type == '+' || tokens[i].type == '-') {
+        if(priority > PRI_ADD) {
+          priority = PRI_ADD, loc = i;
+        }
+      } else if(tokens[i].type == '*' || tokens[i].type == '/') {
+        if(priority > PRI_MUL) {
+          priority = PRI_MUL, loc = i;
+        }
+      }
+    }
+  }
+  return loc;
 }
 
 uint32_t eval(int p, int q) {
   if(p > q) {
     // bad expression
+    assert(0);
   } else if(p == q) {
     // single token
     if(tokens[p].type == 1) {
       // oct num
-      int val;
-      sscanf(tokens[p].str, "%d", val);
+      int val = 0;
+      sscanf(tokens[p].str, "%d", &val);
       return val;
     } else if(tokens[p].type == 7) {
       // hex num
-      int val;
-      sscanf(tokens[p].str, "%x", val);
+      int val = 0;
+      sscanf(tokens[p].str, "%x", &val);
       return val;      
     } else if(tokens[p].type == 6) {  //reg
       if(!strcmp(tokens[p].str, "$eax")){
@@ -250,16 +287,37 @@ uint32_t eval(int p, int q) {
     } else {
       assert(0);
     }
-    return tokens[p];
   } else if(check_parentheses(p, q) == true) {
     // check the ( and ) is match
     return eval(p + 1, q - 1);
   } else {
-    
+    int op = dominant_operator(p, q);
+    if(op == -1) {  // * ! -
+      assert(op == p);
+      switch (tokens[op].type) {
+        //case TK_DEREF: return *(eval(p + 1, q));
+        case '!': return !eval(p + 1, q);
+        case TK_NEG: return -eval(p + 1, q);
+        default : assert(0);
+      }
+    } else {
+      int val1 = eval(p, op - 1);
+      int val2 = eval(op + 1, q);
+      switch(tokens[op].type) {
+        case '+': return val1 + val2;
+        case '-': return val1 - val2;
+        case '*': return val1 * val2;
+        case '/': return val1 / val2;
+        case TK_OR: return val1 || val2;
+        case TK_AND: return val1 && val2;
+        case TK_EQ: return (val1 == val2);
+        case TK_NEQ: return (val1 != val2);
+        default: assert(0);
+      }
+    }
   }
   return 0;
 }
-
 
 
 uint32_t expr(char *e, bool *success) {
@@ -269,7 +327,14 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  int i = 0;
+  for( ; i < nr_token ;i ++) {
+    if(tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != ')'))) {
+      tokens[i].type = TK_DEREF;
+    } else if(tokens[i].type == '-' && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_HEX && tokens[i - 1].type != ')'))) {
+      tokens[i].type = TK_NEG;
+    }
+  }
 
-  return 0;
+  return eval(0, nr_token - 1);
 }
