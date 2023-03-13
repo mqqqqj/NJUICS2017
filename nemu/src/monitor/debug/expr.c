@@ -16,7 +16,14 @@ enum {
   TK_REG = 6,
   TK_HEX = 7,
   TK_DEREF = 8,
-  TK_NEG = 9
+  TK_NEG = 9,
+  TK_LB = 10,
+  TK_RB = 11,
+  TK_ADD = 12,
+  TK_SUB = 13,
+  TK_MUL = 14,
+  TK_DIV = 15,
+  TK_NOT = 16
   /* TODO: Add more token types */
 };
 
@@ -39,18 +46,19 @@ static struct rule {
 
   {" +", TK_NOTYPE},    // spaces
   {"[0-9]+", TK_NUM},
-  {"\\+", '+'},         // plus
-  {"\\-", '-'},         // sub
-  {"\\*", '*'},         // multiply
-	{"\\/", '/'},         //division
-  {"\\(", '('},         // left bracket
-  {"\\)", ')'},         // right bracket
+  {"\\+", TK_ADD},         // plus
+  {"\\-", TK_SUB},         // sub
+  {"\\*", TK_MUL},         // multiply
+	{"\\/", TK_DIV},         //division
+  {"\\(", TK_LB},         // left bracket
+  {"\\)", TK_RB},         // right bracket
   {"==", TK_EQ},        // equal
   {"!=", TK_NEQ},       // not equal
   {"&&", TK_AND},       // and op
   {"\\|\\|", TK_OR},    // or op
   {"\\$[a-z]+", TK_REG},// registers
-  {"0[xX][0-9a-fA-F]+", TK_HEX}
+  {"0[xX][0-9a-fA-F]+", TK_HEX},
+  {"!", TK_NOT}
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -146,38 +154,37 @@ static bool make_token(char *e) {
             strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
             nr_token ++;
             break;
-          case '+':
-            tokens[i].type = '+';
+          case TK_NOT:
+            tokens[i].type = TK_NOT;
+            strcpy(tokens[nr_token].str, "!");
+            nr_token ++;
+          case TK_ADD:
+            tokens[i].type = TK_ADD;
             strcpy(tokens[nr_token].str, "+");
             nr_token ++;
             break;
-          case '-':
-            tokens[i].type = '-';
+          case TK_SUB:
+            tokens[i].type = TK_SUB;
             strcpy(tokens[nr_token].str, "-");
             nr_token ++;
             break;
-          case '*':
-            tokens[i].type = '*';
+          case TK_MUL:
+            tokens[i].type = TK_MUL;
             strcpy(tokens[nr_token].str, "*");
             nr_token ++;
             break;
-          case '/':
-            tokens[i].type = '/';
+          case TK_DIV:
+            tokens[i].type = TK_DIV;
             strcpy(tokens[nr_token].str, "/");
             nr_token ++;
             break;
-          case '!':
-            tokens[i].type = '!';
-            strcpy(tokens[nr_token].str, "!");
-            nr_token ++;
-            break;
-          case '(':
-            tokens[i].type = '(';
+          case TK_LB:
+            tokens[i].type = TK_LB;
             strcpy(tokens[nr_token].str, "(");
             nr_token ++;
             break;
-          case ')':
-            tokens[i].type = ')';
+          case TK_RB:
+            tokens[i].type = TK_RB;
             strcpy(tokens[nr_token].str, ")");
             nr_token ++;
             break;
@@ -198,9 +205,7 @@ static bool make_token(char *e) {
 
 
 bool check_parentheses(int p, int q) {
-  printf("%d\n",tokens[p].type);
-  printf("%s\n",tokens[q].str);
-  if(tokens[p].type == '(' && tokens[q].type == ')') {
+  if(tokens[p].type == TK_LB && tokens[q].type == TK_RB) {
     // int num_lb = 0, num_rb = 0, index = p;
     // for ( ; index <= q; index ++) {
     //   if(tokens[index].type == '(') num_lb ++;
