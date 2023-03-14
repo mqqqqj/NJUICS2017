@@ -29,6 +29,22 @@ void cpu_exec(uint64_t n) {
 
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
+    WP* wp = head;
+    bool is_changed = false;
+    while(wp) {
+      bool* success;
+      int new_val = expr(wp->expr, success);
+      if(new_val != wp->expr_val) {
+        wp->expr_val = new_val;
+        is_changed = true;
+      } 
+      wp = wp->next;
+    }
+    if(is_changed) {
+      nemu_state = NEMU_STOP;
+      Log("Change(s) in the value of the monitoring point was(were) detected");
+    }
+
 
 #endif
 

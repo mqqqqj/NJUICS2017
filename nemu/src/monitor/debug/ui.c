@@ -56,7 +56,15 @@ static int cmd_info(char *args) {
     }
     printf("eip\t\t0x%08x\t\t%d\n", cpu.eip, cpu.eip);
   } else if(strcmp(arg,"w") == 0) {
-    puts("print watch point infomation...... Nothing happened");
+    puts("print watch point infomation...... \n");
+    WP *temp = head;
+    if (temp == NULL){
+      printf("No watchpoints\n");
+    }
+    while (temp != NULL){
+      printf("Watch point %d: %s\n", temp->NO, temp->expr);
+      temp = temp->next;
+	  }
   } else {
     puts("unknown arg or miss input");
   }
@@ -91,6 +99,23 @@ static int cmd_x(char *args) {
   return 0;  
 }
 
+static int cmd_d(char *args) {
+  int N;
+  char *arg = strtok(NULL, " ");
+  sscanf(arg, "%d", &N);
+  free_wp(N);
+  return 0;
+}
+
+static int cmd_w(char *args) {
+  char *arg = strtok(NULL, " ");
+  WP* wp = new_wp();
+  wp->expr = args;
+  bool *success = false;
+  wp->expr_val = expr(args, success);
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -105,6 +130,8 @@ static struct {
   { "info", "print registers status | watchpoint infomations", cmd_info},
   { "x", "scan memory", cmd_x},
   { "p", "expression evaluation", cmd_p},
+  { "d", "delete watchpoint", cmd_d},
+  { "w", "start to watch some expr", cmd_w}
 
   /* TODO: Add more commands */
 

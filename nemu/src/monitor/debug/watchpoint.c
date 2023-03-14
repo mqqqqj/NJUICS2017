@@ -27,10 +27,16 @@ WP* new_wp() {
   }
 }
 
-void free_wp(WP* wp) {
+void free_wp(int N) {
   WP* ptr = head, ptr2 = free_;
-  add_to(free_, wp);
-  delete_from(head,wp);
+  while(ptr->NO != N) {
+    ptr = ptr->next;
+  }
+  if(!ptr) assert(0);
+  else {
+    add_to(free_, ptr);
+    delete_from(head, ptr);
+  } 
 }
 
 void delete_from(WP* list, WP* victim) {
