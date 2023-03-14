@@ -101,7 +101,6 @@ static int cmd_d(char *args) {
 }
 
 static int cmd_w(char *args) {
-  char *arg = strtok(NULL, " ");
   bool success = true;
   uint32_t val = expr(args, &success);
   if(success == false) {
@@ -109,7 +108,7 @@ static int cmd_w(char *args) {
     return 1;
   }
   WP* wp = new_wp();
-  strcpy(wp->expr, arg);
+  strcpy(wp->expr, args);
   wp->expr_val = val;
   Log("New watchpoint create: NO.%d, watching at %s", wp->NO, wp->expr);
   return 0;
