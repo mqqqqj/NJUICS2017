@@ -108,6 +108,9 @@ static int cmd_w(char *args) {
     return 1;
   }
   WP* wp = new_wp();
+  if(!wp) {
+    Log("cannot find an available watchppoint");
+  }
   strcpy(wp->expr, args);
   wp->expr_val = val;
   Log("New watchpoint create: NO.%d, watching at %s", wp->NO, wp->expr);
