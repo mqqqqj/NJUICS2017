@@ -57,14 +57,7 @@ static int cmd_info(char *args) {
     printf("eip\t\t0x%08x\t\t%d\n", cpu.eip, cpu.eip);
   } else if(strcmp(arg,"w") == 0) {
     puts("print watch point infomation...... \n");
-    WP *temp = head;
-    if (temp == NULL){
-      printf("No watchpoints\n");
-    }
-    while (temp != NULL){
-      printf("Watch point %d: %s\n", temp->NO, temp->expr);
-      temp = temp->next;
-	  }
+    print_wps();
   } else {
     puts("unknown arg or miss input");
   }
@@ -73,10 +66,10 @@ static int cmd_info(char *args) {
 
 static int cmd_p(char *args) {
   // Expression evaluation
-  bool *success = false;
+  bool success = true;
 	int i;
-	i = expr(args, success);
-	if (!success){
+	i = expr(args, &success);
+	if (success){
 		printf("%d\n", i);
 	}
 	return 0;
@@ -109,10 +102,16 @@ static int cmd_d(char *args) {
 
 static int cmd_w(char *args) {
   char *arg = strtok(NULL, " ");
+  bool success = true;
+  uint32_t val = expr(args, &success);
+  if(success == false) {
+    Log("Wrong Expression");
+    return 1;
+  }
   WP* wp = new_wp();
-  wp->expr = args;
-  bool *success = false;
-  wp->expr_val = expr(args, success);
+  strcpy(wp->expr, arg);
+  wp->expr_val = val;
+  Log("New watchpoint create: NO.%d, watching at %s", wp->NO, wp->expr);
   return 0;
 }
 
