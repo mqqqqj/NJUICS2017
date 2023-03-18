@@ -51,8 +51,6 @@ void add_to(WP* list, WP* victim) {
 WP* new_wp() {
   WP* victim = free_;//选择从头删除，free_以fifo的形式维护
   if(victim) {//free不为空，有空闲监视点
-    //add_to(head,victim);
-    //delete_from(free_,victim);
     // 判断head是否为null，即判断是否为第一次插入
     if(!head) {
       // first insert
@@ -74,14 +72,53 @@ WP* new_wp() {
 }
 
 void free_wp(int N) {
-  WP* ptr = head;
-  while(ptr->NO != N) {
-    ptr = ptr->next;
+  WP* victim = head;
+  while(victim->NO != N) {
+    victim = victim->next;
   }
-  if(!ptr) assert(0);
+  if(!victim) assert(0);
   else {
-    add_to(free_, ptr);
-    delete_from(head, ptr);
+    // add victim to the tail of free_
+    if(!free_) {
+      // free_ is empty
+      free_ = victim;
+      // delete victim from head
+      if(victim == head) {
+        head = head ->next;
+        victim->next = NULL;
+      } else {
+        WP *p_vic = head;
+        while(p_vic->next->NO != N) {
+          p_vic = p_vic->next;
+        }
+        p_vic->next = victim->next;
+        victim->next = NULL;
+      }
+    } else {
+      // add victim to the tail of free_
+      WP* l_free = free_;
+      while(l_free->next) l_free = l_free->next;
+      l_free->next = victim;
+      // delete victim from head
+      // 1. is head have one node?
+      // 2. head is the node to be deleted?
+      if(head->next == NULL) {
+        // head must be the victim, delete head
+        head = NULL;
+      } else {
+        if(victim == head) {
+          head = head->next;
+          victim->next = NULL;
+        } else {
+          WP *p_vic = head;
+          while(p_vic->next->NO != N) {
+            p_vic = p_vic->next;
+          }
+          p_vic->next = victim->next;
+          victim->next = NULL;          
+        }
+      }
+    }
   } 
 }
 
