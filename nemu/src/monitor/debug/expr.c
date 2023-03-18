@@ -357,42 +357,17 @@ uint32_t eval(int p, int q) {
     return eval(p + 1, q - 1);
   } else {
     int op = dominant_operator(p, q);
-    printf("current domain:%d %d\n",p, q);
+    //printf("current domain:%d %d\n",p, q);
     if(op == -1) {  // * ! -
-      printf("choose %s as dominant op at location %d \n", tokens[p].str, p);
+      //printf("choose %s as dominant op at location %d \n", tokens[p].str, p);
       switch (tokens[p].type) {
         case TK_DEREF: return vaddr_read(eval(p + 1, q),4);
-          // if(tokens[p + 2].type == TK_REG) {
-          //   if (!strcmp(tokens[p + 2].str, "$eax")){
-					//     return vaddr_read(cpu.eax, 4);
-          //   } else if (!strcmp(tokens[p + 2].str, "$ecx")){
-          //     return vaddr_read(cpu.ecx, 4);
-          //   } else if (!strcmp(tokens[p + 2].str, "$edx")){
-          //     return vaddr_read(cpu.edx, 4);
-          //   } else if (!strcmp(tokens[p + 2].str, "$ebx")){
-          //     return vaddr_read(cpu.ebx, 4);
-          //   } else if (!strcmp(tokens[p + 2].str, "$esp")){
-          //     return vaddr_read(cpu.esp, 4);
-          //   } else if (!strcmp(tokens[p + 2].str, "$ebp")){
-          //     return vaddr_read(cpu.ebp, 4);
-          //   } else if (!strcmp(tokens[p + 2].str, "$esi")){
-          //     return vaddr_read(cpu.esi, 4);
-          //   } else if (!strcmp(tokens[p + 2].str, "$edi")){
-          //     return vaddr_read(cpu.edi, 4);
-          //   } else if (!strcmp(tokens[p + 2].str, "$eip")){
-          //     return vaddr_read(cpu.eip, 4);
-          //   } else {
-          //     assert(0);
-          //   }
-          // } else {
-          //   assert(0);
-          // }
         case TK_NOT: return !eval(p + 1, q);
         case TK_NEG: return -eval(p + 1, q);
         default : assert(0);
       }
     } else {
-      printf("choose %s as dominant op at location %d \n", tokens[op].str, op);
+      //printf("choose %s as dominant op at location %d \n", tokens[op].str, op);
       int val1 = eval(p, op - 1);
       int val2 = eval(op + 1, q);
       switch(tokens[op].type) {
@@ -432,8 +407,5 @@ uint32_t expr(char *e, bool *success) {
       tokens[i].type = TK_NEG;
     }
   }
-  // printf("nr token:%d\n", nr_token);
-  // for(i = 0; i < nr_token; i ++) printf("%d %s\n",tokens[i].type,tokens[i].str);
-  // printf("\n");
   return eval(0, nr_token - 1);
 }

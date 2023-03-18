@@ -48,6 +48,7 @@ void free_wp(int N) {
   }
   if(!victim) assert(0);
   else {
+    memset(victim->expr, 0, 100* sizeof(char));
     // add victim to the tail of free_
     if(!free_) {
       // free_ is empty
