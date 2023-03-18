@@ -34,7 +34,10 @@ void delete_from(WP* list, WP* victim) {
 
 void add_tail(WP* list, WP* victim) {
   WP* ptr = list;
-  if(!list) list = victim;
+  if(list == NULL) {
+    list = victim;
+    Log("First insert");
+  }
   else {
     while(ptr->next) ptr = ptr->next;
     ptr->next = victim;
