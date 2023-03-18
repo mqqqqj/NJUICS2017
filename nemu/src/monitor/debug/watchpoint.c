@@ -73,7 +73,7 @@ WP* new_wp() {
 
 void free_wp(int N) {
   WP* victim = head;
-  while(victim->NO != N) {
+  while(victim->NO != N && victim) {
     victim = victim->next;
   }
   if(!victim) assert(0);
