@@ -37,7 +37,6 @@ void add_tail(WP* list, WP* victim) {
   if(list == NULL) {
     list = victim;
     Log("First insert");
-    Log("head %d", (uint32_t)head);
   }
   else {
     while(ptr->next) ptr = ptr->next;
@@ -52,8 +51,21 @@ void add_to(WP* list, WP* victim) {
 WP* new_wp() {
   WP* victim = free_;//选择从头删除，free_以fifo的形式维护
   if(victim) {//free不为空，有空闲监视点
-    add_to(head,victim);
-    delete_from(free_,victim);
+    //add_to(head,victim);
+    //delete_from(free_,victim);
+    // 判断head是否为null，即判断是否为第一次插入
+    if(!head) {
+      // first insert
+      head = victim;
+      free_ = free_->next;
+      victim->next = NULL;
+    } else {
+      WP* ptr = head;
+      while(ptr ->next) ptr = ptr->next;
+      ptr->next = victim;
+      free_ = free_->next;
+      victim->next = NULL;
+    }
     return victim;
   } else {//无空闲监视点
     assert(0);
