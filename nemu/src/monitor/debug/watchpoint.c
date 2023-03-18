@@ -37,6 +37,7 @@ void add_tail(WP* list, WP* victim) {
   if(list == NULL) {
     list = victim;
     Log("First insert");
+    Log("head %d", (uint32_t)head);
   }
   else {
     while(ptr->next) ptr = ptr->next;
