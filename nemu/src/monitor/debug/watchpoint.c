@@ -18,36 +18,6 @@ void init_wp_pool() {
   free_ = wp_pool;
 }
 
-void delete_from(WP* list, WP* victim) {
-  WP* ptr = list;
-  if(list == victim) {
-    //链表头就是要删除的对象
-    list = list->next;
-    ptr->next = NULL;
-    return ;
-  }
-  while(ptr->next != victim) ptr = ptr->next;
-  ptr->next = victim->next;
-  victim->next = NULL;
-}
-
-
-void add_tail(WP* list, WP* victim) {
-  WP* ptr = list;
-  if(list == NULL) {
-    list = victim;
-    Log("First insert");
-  }
-  else {
-    while(ptr->next) ptr = ptr->next;
-    ptr->next = victim;
-  } 
-}
-
-void add_to(WP* list, WP* victim) {
-  add_tail(list, victim);
-}
-
 WP* new_wp() {
   WP* victim = free_;//选择从头删除，free_以fifo的形式维护
   if(victim) {//free不为空，有空闲监视点
