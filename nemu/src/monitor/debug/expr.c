@@ -433,16 +433,16 @@ uint32_t eval(int p, int q)
   }
   else if (check_parentheses(p, q) == true)
   {
-    Log("check the ( and ) is match");
+    // Log("check the ( and ) is match");
     return eval(p + 1, q - 1);
   }
   else
   {
     int op = dominant_operator(p, q);
-    printf("current domain:%d %d\n", p, q);
+    // printf("current domain:%d %d\n", p, q);
     if (op == -1)
     { // * ! -
-      printf("choose %s as dominant op at location %d \n", tokens[p].str, p);
+      // printf("choose %s as dominant op at location %d \n", tokens[p].str, p);
       switch (tokens[p].type)
       {
       case TK_DEREF:
@@ -517,8 +517,8 @@ uint32_t expr(char *e, bool *success)
     {
       tokens[i].type = TK_NEG;
     }
-    printf("%s", tokens[i].str);
+    // printf("%s", tokens[i].str);
   }
-  printf("\n%d\n", nr_token);
+  // printf("\n%d\n", nr_token);
   return eval(0, nr_token - 1);
 }
