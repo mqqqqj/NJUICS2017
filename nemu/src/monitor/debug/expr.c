@@ -438,7 +438,7 @@ uint32_t eval(int p, int q)
   else
   {
     int op = dominant_operator(p, q);
-    // printf("current domain:%d %d\n", p, q);
+    printf("current domain:%d %d\n", p, q);
     if (op == -1)
     { // * ! -
       printf("choose %s as dominant op at location %d \n", tokens[p].str, p);
