@@ -183,6 +183,7 @@ static bool make_token(char *e)
           tokens[nr_token].type = TK_NOT;
           strcpy(tokens[nr_token].str, "!");
           nr_token++;
+          break;
         case TK_ADD:
           tokens[nr_token].type = TK_ADD;
           strcpy(tokens[nr_token].str, "+");
