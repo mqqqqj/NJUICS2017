@@ -5,16 +5,23 @@
 
 #include "rtl.h"
 
-enum { OP_TYPE_REG, OP_TYPE_MEM, OP_TYPE_IMM };
+enum
+{
+  OP_TYPE_REG,
+  OP_TYPE_MEM,
+  OP_TYPE_IMM
+};
 
 #define OP_STR_SIZE 40
 
-typedef struct {
+typedef struct
+{
   uint32_t type;
   int width;
-  union {
+  union
+  {
     uint32_t reg;
-    rtlreg_t addr;
+    rtlreg_t addr; // uint32_t
     uint32_t imm;
     int32_t simm;
   };
@@ -22,9 +29,10 @@ typedef struct {
   char str[OP_STR_SIZE];
 } Operand;
 
-typedef struct {
+typedef struct
+{
   uint32_t opcode;
-  vaddr_t seq_eip;  // sequential eip
+  vaddr_t seq_eip; // sequential eip  uint32_t
   bool is_operand_size_16;
   uint8_t ext_opcode;
   bool is_jmp;
@@ -35,26 +43,31 @@ typedef struct {
   char asm_buf[128];
   char *p;
 #endif
-} DecodeInfo;
+} DecodeInfo; // store the info after decode
 
-typedef union {
-  struct {
-    uint8_t R_M		:3;
-    uint8_t reg		:3;
-    uint8_t mod		:2;
+typedef union
+{
+  struct
+  {
+    uint8_t R_M : 3;
+    uint8_t reg : 3;
+    uint8_t mod : 2;
   };
-  struct {
-    uint8_t dont_care	:3;
-    uint8_t opcode		:3;
+  struct
+  {
+    uint8_t dont_care : 3;
+    uint8_t opcode : 3;
   };
   uint8_t val;
 } ModR_M;
 
-typedef union {
-  struct {
-    uint8_t base	:3;
-    uint8_t index	:3;
-    uint8_t ss		:2;
+typedef union
+{
+  struct
+  {
+    uint8_t base : 3;
+    uint8_t index : 3;
+    uint8_t ss : 2;
   };
   uint8_t val;
 } SIB;
@@ -71,8 +84,8 @@ extern DecodeInfo decoding;
 #define id_src2 (&decoding.src2)
 #define id_dest (&decoding.dest)
 
-#define make_DHelper(name) void concat(decode_, name) (vaddr_t *eip)
-typedef void (*DHelper) (vaddr_t *);
+#define make_DHelper(name) void concat(decode_, name)(vaddr_t * eip)
+typedef void (*DHelper)(vaddr_t *);
 
 make_DHelper(I2E);
 make_DHelper(I2a);
