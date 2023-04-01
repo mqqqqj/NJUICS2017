@@ -29,7 +29,7 @@ static inline make_DopHelper(I)
  */
 /* sign immediate */
 static inline make_DopHelper(SI)
-{
+{ // 将要跳转到的地址离当前eip的距离(有符号立即数)赋值给op->simm
   assert(op->width == 1 || op->width == 4);
 
   op->type = OP_TYPE_IMM;
@@ -40,8 +40,15 @@ static inline make_DopHelper(SI)
    *
    op->simm = ???
    */
-  TODO();
-
+  assert(op->width == 4 || op->width == 1);
+  if (op->width == 4)
+  {
+    op->simm = (int32_t)instr_fetch(eip, 4);
+  }
+  else
+  {
+    op->simm = (int8_t)instr_fetch(eip, 1);
+  }
   rtl_li(&op->val, op->simm);
 
 #ifdef DEBUG
@@ -74,7 +81,7 @@ static inline make_DopHelper(a)
 static inline make_DopHelper(r)
 {
   op->type = OP_TYPE_REG;
-  op->reg = decoding.opcode & 0x7;
+  op->reg = decoding.opcode & 0x7; // 根据opcode选择哪一个寄存器
   if (load_val)
   {
     rtl_lr(&op->val, op->reg, op->width);
