@@ -102,6 +102,11 @@ static inline make_DopHelper(r)
  * Rd
  * Sw
  */
+/* E: 寄存器或内存,G: 通用寄存器,v：doubleword(32位),b:字节,w:双字节,一个字(16位)
+ * Cd:  4-byte value following the opcode that is used to specify a code offset and
+ * possibly a new value for the code segment register.
+ * Rd: 0~7,EAX~EDI
+ */
 static inline void decode_op_rm(vaddr_t *eip, Operand *rm, bool load_rm_val, Operand *reg, bool load_reg_val)
 {
   read_ModR_M(eip, rm, load_rm_val, reg, load_reg_val);
@@ -121,6 +126,7 @@ static inline make_DopHelper(O)
   snprintf(op->str, OP_STR_SIZE, "0x%x", op->addr);
 #endif
 }
+// op helper end here
 
 /* Eb <- Gb
  * Ev <- Gv

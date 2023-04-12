@@ -33,6 +33,7 @@ static inline void set_width(int width)
 static inline void idex(vaddr_t *eip, opcode_entry *e)
 {
   /* eip is pointing to the byte next to opcode */
+  // decode 实际是 makeDHelper(...),execute也是类似
   if (e->decode)
     e->decode(eip);
   e->execute(eip);
@@ -52,7 +53,7 @@ static make_EHelper(2byte_esc);
 /* 0x80, 0x81, 0x83 */
 make_group(gp1,
            EMPTY, EMPTY, EMPTY, EMPTY,
-           EMPTY, EMPTY, EMPTY, EMPTY)
+           EMPTY, EX(sub), EMPTY, EMPTY)
 
     /* 0xc0, 0xc1, 0xd0, 0xd1, 0xd2, 0xd3 */
     make_group(gp2,
@@ -92,8 +93,8 @@ make_group(gp1,
         /* 0x1c */ EMPTY, EMPTY, EMPTY, EMPTY,
         /* 0x20 */ EMPTY, EMPTY, EMPTY, EMPTY,
         /* 0x24 */ EMPTY, EMPTY, EMPTY, EMPTY,
-        /* 0x28 */ EMPTY, EMPTY, EMPTY, EMPTY,
-        /* 0x2c */ EMPTY, EMPTY, EMPTY, EMPTY,
+        /* 0x28 */ IDEXW(G2E, sub, 1), IDEX(G2E, sub), IDEXW(E2G, sub, 1), IDEX(E2G, sub),
+        /* 0x2c */ IDEXW(I2a, sub, 1), IDEX(I2a, sub), EMPTY, EMPTY,
         /* 0x30 */ EMPTY, EMPTY, EMPTY, EMPTY,
         /* 0x34 */ EMPTY, EMPTY, EMPTY, EMPTY,
         /* 0x38 */ EMPTY, EMPTY, EMPTY, EMPTY,
