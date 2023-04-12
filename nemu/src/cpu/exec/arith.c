@@ -1,5 +1,10 @@
 #include "cpu/exec.h"
 
+static inline void eflags_modify()
+{
+  return;
+}
+
 make_EHelper(add)
 {
   TODO();
@@ -12,17 +17,13 @@ make_EHelper(sub)
   // OF, SF, ZF, AF, PF, and CF are affected
   // t2 = dest - src
   rtl_sub(&t2, &id_dest->val, &id_src->val);
-  // t3 = (dest < t2)?
-  rtl_sltu(&t3, &id_dest->val, &t2);
-  // t2内容写回dest
   operand_write(id_dest, &t2);
   // ZF,SF
   rtl_update_ZFSF(&t2, id_dest->width);
-
-  rtl_sltu(&t0, &id_dest->val, &t2);
-  rtl_or(&t0, &t3, &t0);
+  // CF
+  rtl_sltu(&t0, &id_dest->val, &id_src->val);
   rtl_set_CF(&t0);
-
+  // OF
   rtl_xor(&t0, &id_dest->val, &id_src->val);
   rtl_xor(&t1, &id_dest->val, &t2);
   rtl_and(&t0, &t0, &t1);

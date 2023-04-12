@@ -40,7 +40,6 @@ static inline make_DopHelper(SI)
    *
    op->simm = ???
    */
-  assert(op->width == 4 || op->width == 1);
   if (op->width == 4)
   {
     op->simm = (int32_t)instr_fetch(eip, 4);
