@@ -7,8 +7,24 @@ static inline void eflags_modify()
 
 make_EHelper(add)
 {
-  TODO();
-
+  // t2 = dest + src
+  rtl_add(&t2, &id_dest->val, &id_src->val);
+  // update ZF,SF
+  rtl_update_ZFSF(&t2, id_dest->width);
+  // CF = 1 iff res < dest or src
+  rtl_sltu(&t0, &t2, &id_src->val);
+  rtl_set_CF(&t0);
+  /* OF = 1 if (res is negtive while two adders are positive)
+   *  or if(res is positive while two adders are negtive)
+   * else OF = 0
+   */
+  rtl_xor(&t0, &t2, &id_src->val);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
+  // write to dest
+  operand_write(id_dest, &t2);
   print_asm_template2(add);
 }
 
