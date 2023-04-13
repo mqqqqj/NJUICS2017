@@ -16,6 +16,12 @@ make_EHelper(sub);
 make_EHelper(dec);
 make_EHelper(cmp);
 make_EHelper(neg);
+make_EHelper(adc);
+make_EHelper(sbb);
+make_EHelper(mul);
+make_EHelper(imul);
+make_EHelper(div);
+make_EHelper(idiv);
 
 // Logical Instructions
 make_EHelper(not );
@@ -30,9 +36,14 @@ make_EHelper(setcc);
 make_EHelper(test);
 
 // Control Transfer Instructions
+make_EHelper(jmp);
 make_EHelper(jcc);
 make_EHelper(call);
 make_EHelper(ret);
+
+// Miscellaneous Instructions
+make_EHelper(lea);
+make_EHelper(nop);
 
 make_EHelper(operand_size);
 
