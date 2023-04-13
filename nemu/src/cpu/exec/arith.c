@@ -85,8 +85,15 @@ make_EHelper(dec)
 
 make_EHelper(neg)
 {
-  TODO();
+  rtl_sub(&t3, &tzero, &id_dest->val);
 
+  rtl_update_ZFSF(&t3, id_dest->val);
+  rtl_neq0(&t0, &id_dest->val);
+  rtl_set_CF(&t0); // cf = 0, iff id_dest is 0
+  // OF??
+  rtl_eqi(&t0, &id_dest->val, 0x80000000);
+  rtl_set_OF(&t0);
+  operand_write(id_dest, &t3);
   print_asm_template1(neg);
 }
 

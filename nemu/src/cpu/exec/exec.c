@@ -52,18 +52,18 @@ static make_EHelper(2byte_esc);
 
 /* 0x80, 0x81, 0x83 */
 make_group(gp1,
-           EX(add), EMPTY, EMPTY, EMPTY,
+           EX(add), EX(or), EX(adc), EX(sbb),
            EX(and), EX(sub), EX(xor), EX(cmp))
 
     /* 0xc0, 0xc1, 0xd0, 0xd1, 0xd2, 0xd3 */
     make_group(gp2,
                EMPTY, EMPTY, EMPTY, EMPTY,
-               EMPTY, EMPTY, EMPTY, EMPTY)
+               EX(shl), EX(shr), EMPTY, EX(sar))
 
     /* 0xf6, 0xf7 */
     make_group(gp3,
-               IDEX(test_I, test), EMPTY, EMPTY, EMPTY,
-               EMPTY, EMPTY, EMPTY, EMPTY)
+               IDEX(test_I, test), EMPTY, EMPTY, EX(neg),
+               EX(mul), EX(imul1), EX(div), EX(idiv))
 
     /* 0xfe */
     make_group(gp4,
@@ -73,7 +73,7 @@ make_group(gp1,
     /* 0xff */
     make_group(gp5,
                EMPTY, EMPTY, EMPTY, EMPTY,
-               EMPTY, EMPTY, EX(push), EMPTY)
+               EX(jmp_rm), EMPTY, EX(push), EMPTY)
 
     /* 0x0f 0x01*/
     make_group(gp7,
@@ -85,12 +85,12 @@ make_group(gp1,
     opcode_entry opcode_table[512] = {
         /* 0x00 */ IDEXW(G2E, add, 1), IDEX(G2E, add), IDEXW(E2G, add, 1), IDEX(E2G, add),
         /* 0x04 */ IDEXW(I2a, add, 1), IDEX(I2a, add), EMPTY, EMPTY,
-        /* 0x08 */ EMPTY, EMPTY, EMPTY, EMPTY,
-        /* 0x0c */ EMPTY, EMPTY, EMPTY, EX(2byte_esc),
-        /* 0x10 */ EMPTY, EMPTY, EMPTY, EMPTY,
-        /* 0x14 */ EMPTY, EMPTY, EMPTY, EMPTY,
-        /* 0x18 */ EMPTY, EMPTY, EMPTY, EMPTY,
-        /* 0x1c */ EMPTY, EMPTY, EMPTY, EMPTY,
+        /* 0x08 */ IDEXW(G2E, or, 1), IDEX(G2E, or), IDEXW(E2G, or, 1), IDEX(E2G, or),
+        /* 0x0c */ IDEXW(I2a, or, 1), IDEX(I2a, or), EMPTY, EX(2byte_esc),
+        /* 0x10 */ IDEXW(G2E, adc, 1), IDEX(G2E, adc), IDEXW(E2G, adc, 1), IDEX(E2G, adc),
+        /* 0x14 */ IDEXW(I2a, adc, 1), IDEX(I2a, adc), EMPTY, EMPTY,
+        /* 0x18 */ IDEXW(G2E, sbb, 1), IDEX(G2E, sbb), IDEXW(E2G, sbb, 1), IDEX(E2G, sbb),
+        /* 0x1c */ IDEXW(I2a, sbb, 1), IDEX(I2a, sbb), EMPTY, EMPTY,
         /* 0x20 */ IDEXW(G2E, and, 1), IDEX(G2E, and), IDEXW(E2G, and, 1), IDEX(E2G, and),
         /* 0x24 */ IDEXW(I2a, and, 1), IDEX(I2a, and), EMPTY, EMPTY,
         /* 0x28 */ IDEXW(G2E, sub, 1), IDEX(G2E, sub), IDEXW(E2G, sub, 1), IDEX(E2G, sub),
@@ -109,7 +109,7 @@ make_group(gp1,
         /* 0x5c */ IDEX(r, pop), IDEX(r, pop), IDEX(r, pop), IDEX(r, pop),
         /* 0x60 */ EMPTY, EMPTY, EMPTY, EMPTY,
         /* 0x64 */ EMPTY, EMPTY, EX(operand_size), EMPTY,
-        /* 0x68 */ IDEX(push_SI, push), EMPTY, IDEXW(push_SI, push, 1), EMPTY,
+        /* 0x68 */ IDEX(push_SI, push), IDEX(I_E2G, imul3), IDEXW(push_SI, push, 1), IDEXW(I_E2G, imul3, 1),
         /* 0x6c */ EMPTY, EMPTY, EMPTY, EMPTY,
         /* 0x70 */ IDEXW(J, jcc, 1), IDEXW(J, jcc, 1), IDEXW(J, jcc, 1), IDEXW(J, jcc, 1),
         /* 0x74 */ IDEXW(J, jcc, 1), IDEXW(J, jcc, 1), IDEXW(J, jcc, 1), IDEXW(J, jcc, 1),
@@ -141,7 +141,7 @@ make_group(gp1,
         /* 0xdc */ EMPTY, EMPTY, EMPTY, EMPTY,
         /* 0xe0 */ EMPTY, EMPTY, EMPTY, IDEXW(J, jcc, 1),
         /* 0xe4 */ EMPTY, EMPTY, EMPTY, EMPTY,
-        /* 0xe8 */ IDEX(J, call), EMPTY, EMPTY, EMPTY,
+        /* 0xe8 */ IDEX(J, call), IDEX(J, jmp), EMPTY, IDEXW(J, jmp, 1),
         /* 0xec */ EMPTY, EMPTY, EMPTY, EMPTY,
         /* 0xf0 */ EMPTY, EMPTY, EMPTY, EMPTY,
         /* 0xf4 */ EMPTY, EMPTY, IDEXW(E, gp3, 1), IDEX(E, gp3),
@@ -193,7 +193,7 @@ make_group(gp1,
         /* 0xa0 */ EMPTY, EMPTY, EMPTY, EMPTY,
         /* 0xa4 */ EMPTY, EMPTY, EMPTY, EMPTY,
         /* 0xa8 */ EMPTY, EMPTY, EMPTY, EMPTY,
-        /* 0xac */ EMPTY, EMPTY, EMPTY, EMPTY,
+        /* 0xac */ EMPTY, EMPTY, EMPTY, IDEX(E2G, imul2),
         /* 0xb0 */ EMPTY, EMPTY, EMPTY, EMPTY,
         /* 0xb4 */ EMPTY, EMPTY, IDEXW(mov_E2G, movzx, 1), IDEX(mov_E2G, movzx),
         /* 0xb8 */ EMPTY, EMPTY, EMPTY, EMPTY,
