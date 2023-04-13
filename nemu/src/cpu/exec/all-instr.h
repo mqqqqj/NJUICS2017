@@ -5,7 +5,7 @@ make_EHelper(push);
 make_EHelper(pop);
 make_EHelper(leave);
 make_EHelper(cwtl); // Convert Word to Long
-make_EHelper(cwtd); // Convert Signed Word to Signed Double Word
+make_EHelper(cltd); // Convert Signed Word to Signed Double Word
 make_EHelper(movsx);
 make_EHelper(movzx);
 
@@ -42,6 +42,7 @@ make_EHelper(jmp);
 make_EHelper(jmp_rm);
 make_EHelper(jcc);
 make_EHelper(call);
+make_EHelper(call_rm);
 make_EHelper(ret);
 
 // Miscellaneous Instructions
