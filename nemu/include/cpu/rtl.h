@@ -169,14 +169,14 @@ make_rtl_setget_eflags(CF)
                 static inline void rtl_mv(rtlreg_t *dest, const rtlreg_t *src1)
 {
   // dest <- src1
-  TODO();
-  rtl_li(dest, *src1);
+  // TODO();
+  rtl_addi(dest, src1, 0);
 }
 
 static inline void rtl_not(rtlreg_t *dest)
 {
   // dest <- ~dest
-  TODO();
+  // TODO();
   rtl_xori(dest, dest, 0xffffffff);
 }
 
