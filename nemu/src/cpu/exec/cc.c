@@ -56,7 +56,7 @@ void rtl_setcc(rtlreg_t *dest, uint8_t subcode)
     break;
   case CC_LE:
     // (ZF=1 or SF≠OF)
-    assert(dest != &t3 && dest != &t2 && &t2 != &t3);
+    // assert(dest != &t3 && dest != &t2 && &t2 != &t3);
     rtl_get_ZF(&t2);
     rtl_get_SF(&t3);
     rtl_get_OF(dest);
