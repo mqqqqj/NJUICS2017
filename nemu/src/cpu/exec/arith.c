@@ -33,7 +33,6 @@ make_EHelper(sub)
   // OF, SF, ZF, AF, PF, and CF are affected
   // t2 = dest - src
   rtl_sub(&t2, &id_dest->val, &id_src->val);
-
   // ZF,SF
   rtl_update_ZFSF(&t2, id_dest->width);
   // CF
