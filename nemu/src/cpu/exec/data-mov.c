@@ -101,7 +101,7 @@ make_EHelper(movzx)
 
 make_EHelper(lea)
 {
-  TODO();
+  // TODO();
   rtl_li(&t2, id_src->addr);
   operand_write(id_dest, &t2);
   print_asm_template2(lea);
