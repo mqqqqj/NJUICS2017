@@ -30,6 +30,7 @@ make_EHelper(call)
 {
   // the target address is calculated at the decode stage
   // eip入栈
+  TODO();
   rtl_li(&t2, decoding.seq_eip);
   rtl_push(&t2);
   decoding.is_jmp = 1;
@@ -38,6 +39,7 @@ make_EHelper(call)
 
 make_EHelper(ret)
 {
+  TODO();
   rtl_pop(&t2);
   decoding.jmp_eip = t2;
   decoding.is_jmp = 1;
@@ -46,6 +48,7 @@ make_EHelper(ret)
 
 make_EHelper(call_rm)
 {
+  TODO();
   rtl_li(&t2, decoding.seq_eip);
   rtl_push(&t2);
   decoding.is_jmp = 1;

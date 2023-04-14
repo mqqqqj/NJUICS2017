@@ -2,6 +2,7 @@
 
 make_EHelper(test)
 {
+  TODO();
   rtl_and(&t2, &id_dest->val, &id_src->val);
   rtl_update_ZFSF(&t2, id_dest->width);
   rtl_set_CF(&tzero);
@@ -11,6 +12,7 @@ make_EHelper(test)
 
 make_EHelper(and)
 {
+  TODO();
   rtl_and(&t2, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t2);
   rtl_update_ZFSF(&t2, id_dest->width);
@@ -21,6 +23,7 @@ make_EHelper(and)
 
 make_EHelper(xor)
 {
+  TODO();
   rtl_xor(&t2, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t2);
   // modify eflags
@@ -34,6 +37,7 @@ make_EHelper(xor)
 
 make_EHelper(or)
 {
+  TODO();
   rtl_or(&t3, &id_dest->val, &id_src->val);
   // modify eflags
   operand_write(id_dest, &t3);
@@ -45,6 +49,7 @@ make_EHelper(or)
 
 make_EHelper(sal)
 {
+  TODO();
   // unnecessary to update CF and OF in NEMU
   rtl_shl(&t3, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t3);
@@ -54,6 +59,7 @@ make_EHelper(sal)
 
 make_EHelper(sar)
 {
+  TODO();
   // unnecessary to update CF and OF in NEMU
   rtl_sext(&t3, &id_dest->val, id_dest->width);
   rtl_sar(&t3, &t3, &id_src->val);
@@ -64,6 +70,7 @@ make_EHelper(sar)
 
 make_EHelper(shl)
 {
+  TODO();
   // unnecessary to update CF and OF in NEMU
   rtl_shl(&t3, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t3);
@@ -73,6 +80,7 @@ make_EHelper(shl)
 
 make_EHelper(shr)
 {
+  TODO();
   // unnecessary to update CF and OF in NEMU
   rtl_shr(&t3, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t3);
@@ -82,6 +90,7 @@ make_EHelper(shr)
 
 make_EHelper(setcc)
 {
+  TODO();
   uint8_t subcode = decoding.opcode & 0xf;
   rtl_setcc(&t2, subcode);
   operand_write(id_dest, &t2);
@@ -91,6 +100,7 @@ make_EHelper(setcc)
 
 make_EHelper(not )
 {
+  TODO();
   rtl_not(&id_dest->val);
   operand_write(id_dest, &id_dest->val);
   print_asm_template1(not );

@@ -2,6 +2,7 @@
 
 make_EHelper(add)
 {
+  TODO();
   // t2 = dest + src
   rtl_add(&t2, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t2);
@@ -25,6 +26,7 @@ make_EHelper(add)
 
 make_EHelper(sub)
 {
+  TODO();
   // OF, SF, ZF, AF, PF, and CF are affected
   // t2 = dest - src
   rtl_sub(&t2, &id_dest->val, &id_src->val);
@@ -45,6 +47,7 @@ make_EHelper(sub)
 
 make_EHelper(cmp)
 {
+  TODO();
   // OF, SF, ZF, AF, PF, and CF are affected
   // t2 = dest - src
   rtl_sub(&t2, &id_dest->val, &id_src->val);
@@ -65,6 +68,7 @@ make_EHelper(cmp)
 
 make_EHelper(inc)
 {
+  TODO();
   rtl_addi(&t3, &id_dest->val, 1);
   operand_write(id_dest, &t3); // todo::忘记写回了
   rtl_update_ZFSF(&t3, id_dest->width);
@@ -74,6 +78,7 @@ make_EHelper(inc)
 
 make_EHelper(dec)
 {
+  TODO();
   rtl_subi(&t3, &id_dest->val, 1);
   operand_write(id_dest, &t3);
   rtl_update_ZFSF(&t3, id_dest->width);
@@ -83,6 +88,7 @@ make_EHelper(dec)
 
 make_EHelper(neg)
 {
+  TODO();
   rtl_sub(&t3, &tzero, &id_dest->val);
 
   rtl_update_ZFSF(&t3, id_dest->width);
