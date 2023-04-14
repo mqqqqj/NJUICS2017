@@ -175,14 +175,23 @@ make_rtl_setget_eflags(CF)
 static inline void rtl_not(rtlreg_t *dest)
 {
   // dest <- ~dest
-  rtl_li(dest, ~(*dest));
+  rtl_xori(dest, dest, 0xffffffff);
 }
 
 static inline void rtl_sext(rtlreg_t *dest, const rtlreg_t *src1, int width)
 {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
-  int32_t mov_bits = 32 - width * 8;
-  *dest = (int32_t)((int32_t)((int32_t)*src1 << mov_bits) >> mov_bits);
+  // int32_t mov_bits = 32 - width * 8;
+  // *dest = (int32_t)((int32_t)((int32_t)*src1 << mov_bits) >> mov_bits);
+  if (width == 4)
+  {
+    rtl_mv(dest, src1);
+  }
+  else
+  {
+    rtl_shli(dest, src1, 32 - width * 8);
+    rtl_sari(dest, dest, 32 - width * 8);
+  }
 }
 
 static inline void rtl_push(const rtlreg_t *src1)
