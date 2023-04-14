@@ -2,7 +2,6 @@
 
 make_EHelper(mov)
 {
-  TODO();
   operand_write(id_dest, &id_src->val);
   print_asm_template2(mov);
 }
