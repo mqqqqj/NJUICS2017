@@ -49,12 +49,12 @@ make_EHelper(leave)
  * 或 ax 的 16 位整数扩展为 32 位，高 16 位用 ax 的符号位填充保存到 dx */
 make_EHelper(cltd)
 {
-  TODO();
+  // TODO();
   if (decoding.is_operand_size_16)
   {
     rtl_lr_w(&t0, R_AX);
     rtl_sext(&t0, &t0, 2);
-    rtl_sari(&t0, &t0, 31);
+    rtl_sari(&t0, &t0, 31); //>16似乎都可以
     rtl_sr_w(R_DX, &t0);
   }
   else
