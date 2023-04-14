@@ -1,10 +1,5 @@
 #include "cpu/exec.h"
 
-static inline void eflags_modify()
-{
-  return;
-}
-
 make_EHelper(add)
 {
   // t2 = dest + src
@@ -89,7 +84,7 @@ make_EHelper(neg)
 {
   rtl_sub(&t3, &tzero, &id_dest->val);
 
-  rtl_update_ZFSF(&t3, id_dest->val);
+  rtl_update_ZFSF(&t3, id_dest->width);
   rtl_neq0(&t0, &id_dest->val);
   rtl_set_CF(&t0); // cf = 0, iff id_dest is 0
   // OF??
