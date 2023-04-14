@@ -203,19 +203,24 @@ static inline void rtl_pop(rtlreg_t *dest)
 
 static inline void rtl_eq0(rtlreg_t *dest, const rtlreg_t *src1)
 {
-  *dest = (*src1 == 0 ? 1 : 0);
+  // *dest = (*src1 == 0 ? 1 : 0);
+  rtl_sltui(dest, src1, 1);
 }
 
 static inline void rtl_eqi(rtlreg_t *dest, const rtlreg_t *src1, int imm)
 {
   // dest <- (src1 == imm ? 1 : 0)
-  *dest = (*src1 == imm ? 1 : 0);
+  // *dest = (*src1 == imm ? 1 : 0);
+  rtl_xori(dest, src1, imm);
+  rtl_eq0(dest, dest);
 }
 
 static inline void rtl_neq0(rtlreg_t *dest, const rtlreg_t *src1)
 {
   // dest <- (src1 != 0 ? 1 : 0)
-  *dest = (*src1 != 0 ? 1 : 0);
+  // *dest = (*src1 != 0 ? 1 : 0);
+  rtl_eq0(dest, src1);
+  rtl_req0(dest, dest);
 }
 // 获取符号位
 static inline void rtl_msb(rtlreg_t *dest, const rtlreg_t *src1, int width)
@@ -229,15 +234,16 @@ static inline void rtl_msb(rtlreg_t *dest, const rtlreg_t *src1, int width)
 static inline void rtl_update_ZF(const rtlreg_t *result, int width)
 {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-  uint32_t val_after_rmov = 0xffffffff >> (32 - 8 * width) & *result;
+  uint32_t val_after_rmov = (0xffffffffu >> (32 - 8 * width)) & (*result);
   cpu.eflags.ZF = val_after_rmov == 0 ? 1 : 0;
 }
 
 static inline void rtl_update_SF(const rtlreg_t *result, int width)
 {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
+  assert(&t0 != result);
   rtl_msb(&t0, result, width);
-  cpu.eflags.SF = t0;
+  rtl_set_SF(&t0);
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t *result, int width)
