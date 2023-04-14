@@ -14,10 +14,8 @@ make_EHelper(push)
 
 make_EHelper(pop)
 {
-  rtl_pop(&t0);
-  operand_write(id_dest, &t0);
-  // assert(id_dest->type == OP_TYPE_REG);
-  // rtl_sr(id_dest->reg, id_dest->width, t0);
+  rtl_pop(&t3);
+  operand_write(id_dest, &t3);
   print_asm_template1(pop);
 }
 
