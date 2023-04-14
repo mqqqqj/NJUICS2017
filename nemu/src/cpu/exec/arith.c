@@ -68,11 +68,13 @@ make_EHelper(cmp)
 
 make_EHelper(inc)
 {
-  TODO();
-  rtl_addi(&t3, &id_dest->val, 1);
-  operand_write(id_dest, &t3); // todo::忘记写回了
-  rtl_update_ZFSF(&t3, id_dest->width);
-  rtl_set_OF(t3 == 0x80000000);
+  // TODO();
+  rtl_addi(&t2, &id_dest->val, 1);
+  operand_write(id_dest, &t2); // todo::忘记写回了
+  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_eqi(&t0, &t2, 0x80000000);
+  rtl_set_OF(&t0);
+  // rtl_set_OF(t3 == 0x80000000);
   print_asm_template1(inc);
 }
 
