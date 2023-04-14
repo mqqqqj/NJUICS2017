@@ -26,16 +26,16 @@ make_EHelper(add)
 
 make_EHelper(sub)
 {
-  TODO();
+  // TODO();
   // OF, SF, ZF, AF, PF, and CF are affected
   // t2 = dest - src
   rtl_sub(&t2, &id_dest->val, &id_src->val);
   // ZF,SF
   rtl_update_ZFSF(&t2, id_dest->width);
-  // CF
+  // CF, 如何判断借位?被减数小于减数
   rtl_sltu(&t0, &id_dest->val, &id_src->val);
   rtl_set_CF(&t0);
-  // OF
+  // OF,如何判断溢出? pos - neg, neg - pos ,被减数同时与减数和差异号,去看符号位
   rtl_xor(&t0, &id_dest->val, &id_src->val);
   rtl_xor(&t1, &id_dest->val, &t2);
   rtl_and(&t0, &t0, &t1);
