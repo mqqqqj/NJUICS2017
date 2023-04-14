@@ -46,28 +46,28 @@ void rtl_setcc(rtlreg_t *dest, uint8_t subcode)
     rtl_or(dest, dest, &temp);
     break;
   }
-
   case CC_S:
     rtl_get_SF(dest);
     break;
   case CC_L:
   {
     //(SF≠OF)
-    uint32_t temp;
-    rtl_get_SF(&temp);
-    rtl_get_OF(dest);
-    rtl_xor(dest, dest, &temp);
+    // uint32_t temp;
+    // rtl_get_SF(&temp);
+    // rtl_get_OF(dest);
+    *dest = cpu.eflags.SF != cpu.eflags.OF;
     break;
   }
   case CC_LE:
   {
     // (ZF=1 or SF≠OF)
-    uint32_t temp;
-    rtl_get_SF(&temp);
-    rtl_get_OF(dest);
-    rtl_xor(dest, dest, &temp);
-    rtl_get_ZF(&temp);
-    rtl_or(dest, dest, &temp);
+    // uint32_t temp;
+    // rtl_get_SF(&temp);
+    // rtl_get_OF(dest);
+    // rtl_xor(dest, dest, &temp);
+    // rtl_get_ZF(&temp);
+    // rtl_or(dest, dest, &temp);
+    *dest = cpu.eflags.ZF == 1 || cpu.eflags.SF != cpu.eflags.OF;
     break;
   }
   default:
