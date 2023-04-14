@@ -47,7 +47,7 @@ make_EHelper(sub)
 
 make_EHelper(cmp)
 {
-  TODO();
+  // TODO();
   // OF, SF, ZF, AF, PF, and CF are affected
   // t2 = dest - src
   rtl_sub(&t2, &id_dest->val, &id_src->val);
