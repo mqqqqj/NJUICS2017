@@ -23,7 +23,7 @@ make_EHelper(and)
 
 make_EHelper(xor)
 {
-  TODO();
+  // TODO();
   rtl_xor(&t2, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t2);
   // modify eflags
