@@ -46,8 +46,10 @@ make_EHelper(ret)
 
 make_EHelper(call_rm)
 {
-  rtl_push(eip);
-  decoding.is_jmp = true;
+  rtl_li(&t2, decoding.seq_eip);
+  rtl_push(&t2);
   decoding.jmp_eip = id_dest->val;
+  decoding.is_jmp = true;
+
   print_asm("call *%s", id_dest->str);
 }
