@@ -56,12 +56,12 @@ void rtl_setcc(rtlreg_t *dest, uint8_t subcode)
     break;
   case CC_LE:
     // (ZF=1 or SF≠OF)
-    // assert(dest != &t3 && dest != &t2 && &t2 != &t3);
-    rtl_get_ZF(&t2);
+    assert(dest != &t3);
     rtl_get_SF(&t3);
     rtl_get_OF(dest);
     rtl_xor(dest, dest, &t3);
-    rtl_or(dest, dest, &t2); //?
+    rtl_get_ZF(&t3);
+    rtl_or(dest, dest, &t3);
     break;
   default:
     panic("should not reach here");
