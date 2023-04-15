@@ -74,7 +74,7 @@ make_EHelper(inc)
   rtl_update_ZFSF(&t2, id_dest->width);
   rtl_eqi(&t0, &t2, 0x80000000);
   rtl_set_OF(&t0);
-  // rtl_set_OF(t3 == 0x80000000);
+  // rtl_set_OF(t3 == 0x80000000);// 你是罪魁祸首
   print_asm_template1(inc);
 }
 
