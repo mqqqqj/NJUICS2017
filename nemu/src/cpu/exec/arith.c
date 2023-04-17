@@ -91,7 +91,7 @@ make_EHelper(dec)
 
 make_EHelper(neg)
 {
-  TODO();
+  // TODO();
   rtl_sub(&t3, &tzero, &id_dest->val);
 
   rtl_update_ZFSF(&t3, id_dest->width);
