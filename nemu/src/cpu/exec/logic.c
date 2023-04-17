@@ -108,7 +108,7 @@ make_EHelper(not )
 
 make_EHelper(rol) {
   rtl_shri(&t2,&id_dest->val,id_dest->width *8 - id_src->val);
-  rtl_Shl(&t3,&id_dest->val,&id_src->val);
+  rtl_shl(&t3,&id_dest->val,&id_src->val);
   rtl_add(&t1,&t2,&t3);
   operand_write(id_dest,&t1);
   rtl_andi(&t2,&t2,1);
