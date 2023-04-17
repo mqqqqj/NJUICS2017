@@ -70,14 +70,26 @@ make_EHelper(cwtl)
   // TODO();
   if (decoding.is_operand_size_16)
   {
-    rtl_lr_w(&t0, R_AX);
-    rtl_sext(&t0, &t0, 2);
-    rtl_sari(&t0, &t0, 16);
-    rtl_sr_w(R_DX, &t0);
+    rtl_msb(&t2,&cpu.eax,1);
+    if(t2 == 1) {
+      cpu.eax |= 0xff00;
+    } else {
+      cpu.eax &= 0xffff00ff;
+    }
+    //  rtl_lr_w(&t0, R_AX);
+    // rtl_sext(&t0, &t0, 2);
+    // rtl_sari(&t0, &t0, 16);
+    // rtl_sr_w(R_DX, &t0);
   }
   else
   {
-    panic("Nemu does not allow an operand to have a size of a single byte.");
+    // panic("Nemu does not allow an operand to have a size of a single byte.");
+    rtl_msb(&t2,&cpu.eax,2);
+    if(t2 == 1) {
+      cpu.eax |= 0xffff0000;
+    } else {
+      cpu.eax &= 0x0000ffff;
+    }
   }
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
 }
