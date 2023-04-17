@@ -67,7 +67,7 @@ make_EHelper(cltd)
 
 make_EHelper(cwtl)
 {
-  TODO();
+  // TODO();
   if (decoding.is_operand_size_16)
   {
     rtl_lr_w(&t0, R_AX);
