@@ -88,11 +88,13 @@ ssize_t fs_write(int fd, const void *buf, size_t len) {
     Log("Can't write placeholder entry.");
     return 0;
   }
+  TODO();
   return 0;
 }
 
 off_t fs_lseek(int fd, off_t offset, int whence) {
   check_fd_valid(fd);
+  TODO();
   return 0;
 }
 
