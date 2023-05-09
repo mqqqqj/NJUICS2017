@@ -34,7 +34,7 @@ void *_sbrk(intptr_t increment){
   extern end;
   static uintptr_t pb = end;
   uintptr_t pb_updated  = pb + increment;
-  int res = _syscall(SYS_brk, pb_updated, 0, 0);
+  int res = _syscall_(SYS_brk, pb_updated, 0, 0);
   if(res == 0) {
     //if syscall succeed, update pb, and record old one.
     uintptr_t pb_old = pb;
