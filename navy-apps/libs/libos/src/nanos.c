@@ -31,7 +31,17 @@ int _write(int fd, void *buf, size_t count){
 }
 
 void *_sbrk(intptr_t increment){
-  return (void *)-1;
+  extern end;
+  static uintptr_t pb = end;
+  uintptr_t pb_updated  = pb + increment;
+  int res = _syscall(SYS_brk, pb_updated, 0, 0);
+  if(res == 0) {
+    //if syscall succeed, update pb, and record old one.
+    uintptr_t pb_old = pb;
+    pb = pb_updated;
+    return (void*) pb_old;
+  }
+  return (void*) -1;
 }
 
 int _read(int fd, void *buf, size_t count) {
