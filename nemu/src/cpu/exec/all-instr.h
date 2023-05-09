@@ -2,7 +2,9 @@
 // Data Movement Instructions
 make_EHelper(mov);
 make_EHelper(push);
+make_EHelper(pusha);
 make_EHelper(pop);
+make_EHelper(popa);
 make_EHelper(leave);
 make_EHelper(cwtl); // Convert Word to Long
 make_EHelper(cltd); // Convert Signed Word to Signed Double Word
