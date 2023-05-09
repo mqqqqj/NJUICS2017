@@ -6,12 +6,10 @@ int sys_none() {
 }
 
 void sys_exit(int a) {
-  Log("call sys_exit.");
   _halt(a);
 }
 
 int sys_write(int fd, void* buf, size_t len) {
-  Log("call sys_write.");
   if(fd == 1 || fd == 2) {
     char c;
     for(int i = 0; i < len; i ++) {
