@@ -91,6 +91,7 @@ typedef struct
     uint32_t base;
     uint16_t limit;
   }idtr;// IDTR
+  rtlreg_t cs;
 
 } CPU_state;
 

@@ -60,3 +60,4 @@ make_EHelper(out);
 
 // System Instructions
 make_EHelper(lidt);
+make_EHelper(int);
