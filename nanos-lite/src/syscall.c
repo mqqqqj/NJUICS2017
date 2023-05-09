@@ -19,9 +19,6 @@ int sys_write(int fd, void* buf, size_t len) {
       _putc(c);
     }
     return len;
-  } else if( fd == 3) {
-    // return fs_write(fd, buf, len);
-    return 0;
   } else {
     panic("Unhandled fd = %d in sys_write.", fd);
   }
