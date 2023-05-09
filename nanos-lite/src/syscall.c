@@ -6,6 +6,7 @@ int sys_none() {
 }
 
 void sys_exit(int a) {
+  Log("call sys_exit.");
   _halt(a);
 }
 

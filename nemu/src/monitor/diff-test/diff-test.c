@@ -205,6 +205,17 @@ void difftest_step(uint32_t eip)
     diff = true;
     Log("Diff test find eip error: in qemu, eip is 0x%x, while in nemu, eip is 0x%x", r.eip, cpu.eip);
   }
+  // int a = 0,b = 0;
+  // memcpy(&a, r.eflags, sizeof(r.eflags));
+  // memcpy(&b, cpu.eflags, sizeof(cpu.eflags));
+  // if(a != b) {
+  //   diff = true;
+  //   Log("Diff test find eflags error.");
+  // }
+  // if(r.cs != cpu.cs) {
+  //   diff = true;
+  //   Log("Diff test find cs error.");
+  // }
   if (diff)
   {
     nemu_state = NEMU_END;
