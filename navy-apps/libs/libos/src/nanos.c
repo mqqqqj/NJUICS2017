@@ -37,7 +37,6 @@ void *_sbrk(intptr_t increment){
   int res = _syscall_(SYS_brk, pb_updated, 0, 0);
   if(res == 0) {
     //if syscall succeed, update pb, and record old one.
-    // Log("sbrk heap ok.");
     uintptr_t pb_old = pb;
     pb = pb_updated;
     return (void*) pb_old;
