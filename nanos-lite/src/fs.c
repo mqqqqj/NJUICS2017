@@ -62,13 +62,12 @@ void set_open_offset(int fd, off_t offset) {
 }
 
 int fs_open(const char *pathname, int flags, int mode) {
-  int i;
-  for(i = 0; i < NR_FILES; i ++) {
+  for(int i = 0; i < NR_FILES; i ++) {
     if(strcmp(pathname, get_name(i)) == 0)
-      break;
+      return i;
   }
-  assert(i < NR_FILES);
-  return i;
+  panic("File does't exist.");
+  return -1;
 }
 
 ssize_t fs_read(int fd, void *buf, size_t len) {
