@@ -80,6 +80,7 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
   if(read_upper_bound < len)
     len = read_upper_bound;
   ramdisk_read(buf, get_disk_offset(fd) + get_open_offset(fd), len);
+  set_open_offset(fd, get_open_offset(fd) + len);
   return len;
 }
 
