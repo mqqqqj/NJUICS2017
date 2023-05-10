@@ -1,7 +1,7 @@
 #include "fs.h"
 
 extern void ramdisk_read(void *buf, off_t offset, size_t len);
-extern void ramdisk_write(void *buf, off_t offset, size_t len);
+extern void ramdisk_write(const void *buf, off_t offset, size_t len);
 
 typedef struct {
   char *name;
@@ -55,7 +55,9 @@ off_t get_open_offset(int fd) {
 
 void set_open_offset(int fd, off_t offset) {
   check_fd_valid(fd);
-  assert(offset >=0 && offset <= file_table[fd].size);
+  // assert(offset >=0 && offset <= file_table[fd].size);
+  if(offset > file_table[fd].size)
+    offset = file_table[fd].size;
   file_table[fd].open_offset = offset;
 }
 
@@ -88,13 +90,30 @@ ssize_t fs_write(int fd, const void *buf, size_t len) {
     Log("Can't write placeholder entry.");
     return 0;
   }
-  TODO();
-  return 0;
+  int write_upper_bound = get_size(fd) - get_open_offset(fd);
+  if(write_upper_bound < len)
+    len = write_upper_bound;
+  ramdisk_write(buf, get_disk_offset(fd) + get_open_offset(fd), len);
+  set_open_offset(fd, get_open_offset(fd) + len);
+  return len;
 }
 
 off_t fs_lseek(int fd, off_t offset, int whence) {
   check_fd_valid(fd);
-  TODO();
+  switch(whence) {
+    case SEEK_SET:
+      set_open_offset(fd, offset);
+      return get_open_offset(fd);
+    case SEEK_CUR:
+      set_open_offset(fd, get_open_offset(fd) + offset);
+      return get_open_offset(fd);
+    case SEEK_END:
+      set_open_offset(fd, get_size(fd));
+      return get_open_offset(fd);
+    default:
+      panic("Unhandled whence ID = %d", whence);
+      return -1;
+  }
   return 0;
 }
 
