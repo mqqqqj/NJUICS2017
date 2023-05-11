@@ -19,7 +19,8 @@ void dispinfo_read(void *buf, off_t offset, size_t len) {
 }
 
 void fb_write(const void *buf, off_t offset, size_t len) {
-  int temp = len / 4;
+  // int index, x1, y1, y2;
+  int temp = offset / 4;
   int x = temp /_screen.width;
   int y = temp % _screen.width;
   _draw_rect(buf, y, x, len / 4, 1);
