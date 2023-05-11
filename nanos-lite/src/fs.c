@@ -4,6 +4,8 @@ extern void ramdisk_read(void *buf, off_t offset, size_t len);
 extern void ramdisk_write(const void *buf, off_t offset, size_t len);
 extern void dispinfo_read(void *buf, off_t offset, size_t len);
 extern void fb_write(const void *buf, off_t offset, size_t len);
+extern size_t events_read(void *buf, size_t len);
+
 
 typedef struct {
   char *name;
@@ -90,6 +92,8 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
       dispinfo_read(buf, get_open_offset(fd), len);
       set_open_offset(fd, get_open_offset(fd) + len);
       return len;
+    case FD_EVENTS:
+      return events_read(buf, len);
     default:
       ramdisk_read(buf, get_disk_offset(fd) + get_open_offset(fd), len);
       set_open_offset(fd, get_open_offset(fd) + len);
