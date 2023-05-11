@@ -2,6 +2,8 @@
 
 extern void ramdisk_read(void *buf, off_t offset, size_t len);
 extern void ramdisk_write(const void *buf, off_t offset, size_t len);
+extern void dispinfo_read(void *buf, off_t offset, size_t len);
+extern void fb_write(const void *buf, off_t offset, size_t len);
 
 typedef struct {
   char *name;
@@ -27,6 +29,8 @@ static Finfo file_table[] __attribute__((used)) = {
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
+  file_table[FD_FB].size = _screen.width * _screen.height * sizeof(uint32_t);
+  Log("Init fs FD_FB size = %d", file_table[FD_FB].size);
 }
 
 void check_fd_valid(int fd) {
@@ -72,30 +76,52 @@ int fs_open(const char *pathname, int flags, int mode) {
 
 ssize_t fs_read(int fd, void *buf, size_t len) {
   check_fd_valid(fd);
-  if(fd < 3) {
-    Log("Can't read placeholder entry.");
-    return 0;
-  }
   int read_upper_bound = get_size(fd) - get_open_offset(fd);
   if(read_upper_bound < len)
     len = read_upper_bound;
-  ramdisk_read(buf, get_disk_offset(fd) + get_open_offset(fd), len);
-  set_open_offset(fd, get_open_offset(fd) + len);
-  return len;
+  switch(fd) {
+    case FD_STDIN:
+    case FD_STDOUT:
+    case FD_STDERR:
+    case FD_FB:
+      Log("Can't read placeholder or FD_FB entry.");
+      return 0;
+    case FD_DISPINFO:
+      dispinfo_read(buf, get_open_offset(fd), len);
+      set_open_offset(fd, get_open_offset(fd) + len);
+      return len;
+    default:
+      ramdisk_read(buf, get_disk_offset(fd) + get_open_offset(fd), len);
+      set_open_offset(fd, get_open_offset(fd) + len);
+      return len;
+  }
 }
 
 ssize_t fs_write(int fd, const void *buf, size_t len) {
   check_fd_valid(fd);
-  if(fd < 3) {
-    Log("Can't write placeholder entry.");
-    return 0;
-  }
   int write_upper_bound = get_size(fd) - get_open_offset(fd);
   if(write_upper_bound < len)
     len = write_upper_bound;
-  ramdisk_write(buf, get_disk_offset(fd) + get_open_offset(fd), len);
-  set_open_offset(fd, get_open_offset(fd) + len);
-  return len;
+  switch(fd) {
+    case FD_STDIN:
+    case FD_DISPINFO:
+      Log("Can't write placeholder or FD_DISPINFO entry.");
+      return 0;
+    case FD_STDOUT:
+    case FD_STDERR:
+      for(int i = 0; i < len; i ++) {
+        _putc(((char*)buf)[i]);
+      }
+      return len;
+    case FD_FB:
+      fb_write(buf, get_open_offset(fd), len);
+      set_open_offset(fd, get_open_offset(fd) + len);
+      return len;
+    default:
+      ramdisk_write(buf, get_disk_offset(fd) + get_open_offset(fd), len);
+      set_open_offset(fd, get_open_offset(fd) + len);
+      return len;
+  }
 }
 
 off_t fs_lseek(int fd, off_t offset, int whence) {
