@@ -14,8 +14,8 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   rtl_li(&t0,ret_addr);
   rtl_push(&t0);//push eip
   vaddr_t gd_addr = cpu.idtr.base + NO*sizeof(GateDesc);
-  printf("%d %d\n", cpu.idtr.base, cpu.idtr.limit);
-  assert(gd_addr <= cpu.idtr.base + cpu.idtr.limit);
+  // printf("%d %d\n", cpu.idtr.base, cpu.idtr.limit);
+  // assert(gd_addr <= cpu.idtr.base + cpu.idtr.limit);
   uint32_t offset_low = vaddr_read(gd_addr, 2);
   uint32_t offset_high = vaddr_read(gd_addr + sizeof(GateDesc) - 2, 2); 
   uint32_t target_addr = (offset_high << 16) + offset_low;
