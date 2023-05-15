@@ -103,9 +103,12 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
 
 ssize_t fs_write(int fd, const void *buf, size_t len) {
   check_fd_valid(fd);
-  int write_upper_bound = get_size(fd) - get_open_offset(fd);
-  if(write_upper_bound < len)
-    len = write_upper_bound;
+  int write_upper_bound = len;
+  if(fd > 2) {
+    write_upper_bound = get_size(fd) - get_open_offset(fd);
+    if(write_upper_bound < len)
+      len = write_upper_bound;
+  }
   switch(fd) {
     case FD_STDIN:
     case FD_DISPINFO:
